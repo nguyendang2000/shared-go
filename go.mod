@@ -1,4 +1,4 @@
-module shared-go
+module github.com/nguyendang2000/shared-go
 
 go 1.22.2
 
