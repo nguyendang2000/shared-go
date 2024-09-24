@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -20,15 +19,11 @@ func (inst *Service) UpdateOne(dbName, collectionName string, query *Query, upda
 	// Get the collection from the specified database
 	collection := inst.Database(dbName).Collection(collectionName)
 
-	// Convert Query filters and update to BSON
-	bsonFilter := bson.M(query.Filter)
-	bsonUpdate := bson.M(update.Filter)
-
 	// Set upsert option
 	updateOptions := options.Update().SetUpsert(upsert)
 
 	// Update the document that matches the filter
-	_, err := collection.UpdateOne(ctx, bsonFilter, bsonUpdate, updateOptions)
+	_, err := collection.UpdateOne(ctx, query.Filter, update.Filter, updateOptions)
 	if err != nil {
 		return fmt.Errorf(ErrFailedToUpdateDocument, err)
 	}
@@ -47,15 +42,11 @@ func (inst *Service) UpdateMany(dbName, collectionName string, query *Query, upd
 	// Get the collection from the specified database
 	collection := inst.Database(dbName).Collection(collectionName)
 
-	// Convert Query filters and update to BSON
-	bsonFilter := bson.M(query.Filter)
-	bsonUpdate := bson.M(update.Filter)
-
 	// Set upsert option
 	updateOptions := options.Update().SetUpsert(upsert)
 
 	// Update the documents that match the filter
-	_, err := collection.UpdateMany(ctx, bsonFilter, bsonUpdate, updateOptions)
+	_, err := collection.UpdateMany(ctx, query.Filter, update.Filter, updateOptions)
 	if err != nil {
 		return fmt.Errorf(ErrFailedToUpdateDocument, err)
 	}

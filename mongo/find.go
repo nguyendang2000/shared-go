@@ -21,11 +21,8 @@ func (inst *Service) FindOne(dbName, collectionName string, query *Query, result
 	// Get the collection from the specified database
 	collection := inst.Database(dbName).Collection(collectionName)
 
-	// Convert Query filter to BSON
-	bsonFilter := bson.M(query.Filter)
-
 	// Execute FindOne
-	err := collection.FindOne(ctx, bsonFilter).Decode(result)
+	err := collection.FindOne(ctx, query.Filter).Decode(result)
 	if err != nil {
 		// Return ErrDocumentNotFound (the alias) if no documents are found
 		if err == mongo.ErrNoDocuments {
@@ -49,9 +46,6 @@ func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit
 	// Get the collection from the specified database
 	collection := inst.Database(dbName).Collection(collectionName)
 
-	// Convert Query filter to BSON
-	bsonFilter := bson.M(query.Filter)
-
 	// Set options for the query, including limit and offset
 	findOptions := options.Find()
 	if limit > 0 {
@@ -62,7 +56,7 @@ func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit
 	}
 
 	// Execute the query using Find for multiple results
-	cursor, err := collection.Find(ctx, bsonFilter, findOptions)
+	cursor, err := collection.Find(ctx, query.Filter, findOptions)
 	if err != nil {
 		return fmt.Errorf(ErrFailedToExecuteFind, err)
 	}

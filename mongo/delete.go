@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 // DeleteOne deletes a single document from the collection that matches the filter in the Query struct.
@@ -18,11 +16,8 @@ func (inst *Service) DeleteOne(dbName, collectionName string, query *Query) erro
 	// Get the collection from the specified database
 	collection := inst.Database(dbName).Collection(collectionName)
 
-	// Convert Query filter to BSON
-	bsonFilter := bson.M(query.Filter)
-
 	// Delete the document that matches the filter
-	_, err := collection.DeleteOne(ctx, bsonFilter)
+	_, err := collection.DeleteOne(ctx, query.Filter)
 	if err != nil {
 		return fmt.Errorf(ErrFailedToDeleteDocument, err)
 	}
@@ -40,11 +35,8 @@ func (inst *Service) DeleteMany(dbName, collectionName string, query *Query) err
 	// Get the collection from the specified database
 	collection := inst.Database(dbName).Collection(collectionName)
 
-	// Convert Query filter to BSON
-	bsonFilter := bson.M(query.Filter)
-
 	// Delete the documents that match the filter
-	_, err := collection.DeleteMany(ctx, bsonFilter)
+	_, err := collection.DeleteMany(ctx, query.Filter)
 	if err != nil {
 		return fmt.Errorf(ErrFailedToDeleteDocument, err)
 	}
