@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -25,11 +26,16 @@ func (inst *Service) FindOne(dbName, collectionName string, query *Query, result
 
 	// Execute FindOne
 	err := collection.FindOne(ctx, bsonFilter).Decode(result)
-	if err != nil && err != mongo.ErrNoDocuments {
+	if err != nil {
+		// Return ErrDocumentNotFound (the alias) if no documents are found
+		if err == mongo.ErrNoDocuments {
+			return ErrDocumentNotFound
+		}
+		// Return other errors as is
 		return fmt.Errorf(ErrFailedToFindOne, err)
 	}
 
-	// No documents found is not considered an error, return nil
+	// Return nil when the document is successfully found and decoded
 	return nil
 }
 
@@ -68,4 +74,24 @@ func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit
 	}
 
 	return nil
+}
+
+// Exists checks if a document matching the provided filter exists in the collection.
+func (inst *Service) Exists(dbName, collectionName string, query *Query) (bool, error) {
+	var result bson.M // We don't care about the result, just want to check if it exists
+
+	// Use the modified FindOne method
+	err := inst.FindOne(dbName, collectionName, query, &result)
+
+	if err != nil {
+		if errors.Is(err, ErrDocumentNotFound) {
+			// No document found, return false without error
+			return false, nil
+		}
+		// Return false and the error if there's another issue
+		return false, fmt.Errorf(ErrFailedToCheckExistence, err)
+	}
+
+	// Document found, return true
+	return true, nil
 }
