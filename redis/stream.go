@@ -53,11 +53,13 @@ func (inst *Service) ReadFromStream(stream string, count int64, block time.Durat
 		return nil, fmt.Errorf(ErrReadFromStream, err)
 	}
 
+	var messages []redis.XMessage
+
 	if len(result) > 0 {
-		return result[0].Messages, nil
+		messages = result[0].Messages
 	}
 
-	return []redis.XMessage{}, nil
+	return messages, nil
 }
 
 // ReadGroupFromStream reads entries from a Redis stream within a consumer group, starting from a specific message ID.
@@ -84,7 +86,12 @@ func (inst *Service) ReadGroupFromStream(stream, group, consumer string, count i
 		return nil, fmt.Errorf(ErrReadGroupFromStream, err)
 	}
 
-	messages := result[0].Messages
+	var messages []redis.XMessage
+
+	if len(result) > 0 {
+		messages = result[0].Messages
+	}
+
 	if autoAck {
 		for _, msg := range messages {
 			_, ackErr := inst.AcknowledgeMessage(stream, group, msg.ID)
@@ -94,11 +101,7 @@ func (inst *Service) ReadGroupFromStream(stream, group, consumer string, count i
 		}
 	}
 
-	if len(messages) > 0 {
-		return messages, nil
-	}
-
-	return []redis.XMessage{}, nil
+	return messages, nil
 }
 
 // AcknowledgeMessage acknowledges a message in a consumer group by its ID.

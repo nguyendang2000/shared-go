@@ -17,7 +17,7 @@ type Service struct {
 // NewService initializes a Redis connection using the provided configuration and a user-defined context.
 // It returns a Service struct that contains the Redis client or an error if the connection fails.
 // The service will automatically close the Redis connection when the passed context is canceled.
-func NewService(ctx context.Context, conf *Config) (*Service, error) {
+func NewService(ctx context.Context, conf Config) (*Service, error) {
 	// Set timeout, use default if not provided.
 	timeout := conf.Timeout
 	if timeout == 0 {
