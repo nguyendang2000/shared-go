@@ -10,6 +10,7 @@ const (
 	ErrExpire    = "failed to set expiration on key: %w"
 	ErrTTL       = "failed to get TTL for key: %w"
 	ErrIncr      = "failed to increment key: %w"
+	ErrIncrBy    = "failed to increment key: %w"
 )
 
 // Error messages for Redis Stream operations.

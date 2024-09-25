@@ -97,7 +97,7 @@ func (inst *Service) Close() error {
 }
 
 // Get retrieves the value associated with the given key from Redis.
-// It returns an error if the operation fails.
+// It uses the stored timeout in the Service struct and returns an error if the operation fails.
 func (inst *Service) Get(key string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -111,7 +111,7 @@ func (inst *Service) Get(key string) (string, error) {
 }
 
 // Set stores a key-value pair in Redis with an optional expiration time.
-// It returns an error if the operation fails.
+// It uses the stored timeout in the Service struct and returns an error if the operation fails.
 func (inst *Service) Set(key string, value interface{}, expiration time.Duration) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -125,7 +125,7 @@ func (inst *Service) Set(key string, value interface{}, expiration time.Duration
 }
 
 // Del deletes one or more keys from Redis.
-// It returns the number of keys deleted and an error if the operation fails.
+// It uses the stored timeout in the Service struct and returns the number of keys deleted or an error if the operation fails.
 func (inst *Service) Del(keys ...string) (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -139,7 +139,7 @@ func (inst *Service) Del(keys ...string) (int64, error) {
 }
 
 // Exists checks if one or more keys exist in Redis.
-// It returns the number of existing keys and an error if the operation fails.
+// It uses the stored timeout in the Service struct and returns the number of existing keys or an error if the operation fails.
 func (inst *Service) Exists(keys ...string) (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -153,7 +153,7 @@ func (inst *Service) Exists(keys ...string) (int64, error) {
 }
 
 // Expire sets a timeout on a specific key, after which the key will expire.
-// It returns an error if the operation fails.
+// It uses the stored timeout in the Service struct and returns an error if the operation fails.
 func (inst *Service) Expire(key string, expiration time.Duration) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -167,7 +167,7 @@ func (inst *Service) Expire(key string, expiration time.Duration) error {
 }
 
 // TTL retrieves the time-to-live (TTL) remaining for a specific key.
-// It returns the TTL duration and an error if the operation fails.
+// It uses the stored timeout in the Service struct and returns the TTL duration or an error if the operation fails.
 func (inst *Service) TTL(key string) (time.Duration, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -181,7 +181,7 @@ func (inst *Service) TTL(key string) (time.Duration, error) {
 }
 
 // Incr increments the integer value of a key by one.
-// It returns the new value and an error if the operation fails.
+// It uses the stored timeout in the Service struct and returns the new value or an error if the operation fails.
 func (inst *Service) Incr(key string) (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -189,6 +189,21 @@ func (inst *Service) Incr(key string) (int64, error) {
 	result, err := inst.client.Incr(ctx, key).Result()
 	if err != nil {
 		return 0, fmt.Errorf(ErrIncr, err)
+	}
+
+	return result, nil
+}
+
+// IncrBy increments the value of the given key by the specified amount.
+// It uses the stored timeout in the Service struct. If the key does not exist, it will be created with the incremented value.
+// It returns the new value after the increment or an error if the operation fails.
+func (inst *Service) IncrBy(key string, increment int64) (int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	defer cancel()
+
+	result, err := inst.client.IncrBy(ctx, key, increment).Result()
+	if err != nil {
+		return 0, fmt.Errorf(ErrIncrBy, err)
 	}
 
 	return result, nil
