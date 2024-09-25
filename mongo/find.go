@@ -107,7 +107,7 @@ func (inst *Service) FindAll(dbName, collectionName string, query *Query, sort [
 	resultValue := reflect.ValueOf(result)
 	resultSlice := resultValue.Elem()
 	if resultSlice.Kind() != reflect.Slice {
-		return fmt.Errorf(ErrInvalidResultArgument)
+		return errors.New(ErrInvalidResultArgument)
 	}
 
 	offset := int64(0)
