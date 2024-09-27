@@ -10,9 +10,9 @@ import (
 )
 
 // GetObject retrieves an object from the specified bucket using the provided object name.
-// It returns the object as an io.Reader, allowing for streaming or further processing.
+// It returns the object as a byte array, allowing for further processing.
 // It uses the timeout from the Service struct.
-func (s *Service) GetObject(bucketName, objectName string) (io.Reader, error) {
+func (s *Service) GetObject(bucketName, objectName string) ([]byte, error) {
 	// Create a context with the specified timeout from the Service struct
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(s.timeout)*time.Second)
 	defer cancel()
@@ -23,16 +23,13 @@ func (s *Service) GetObject(bucketName, objectName string) (io.Reader, error) {
 		return nil, fmt.Errorf(ErrFailedToGetObject, bucketName, err)
 	}
 
-	// Check if the object exists and is valid by reading the first byte
-	_, err = object.Read(make([]byte, 1))
-	if err != nil && err != io.EOF {
+	// Read the object into a byte array
+	data, err := io.ReadAll(object)
+	if err != nil {
 		return nil, fmt.Errorf(ErrFailedToReadObject, objectName, err)
 	}
 
-	// Reset the object reader to the beginning for further processing
-	object.Seek(0, io.SeekStart)
-
-	return object, nil
+	return data, nil
 }
 
 // FGetObject downloads an object from the specified bucket and saves it to the provided file path.
