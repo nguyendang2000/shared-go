@@ -105,3 +105,29 @@ func (q *Query) All(key string, values ...interface{}) *Query {
 	q.Filter[key] = bson.M{"$all": values}
 	return q
 }
+
+// Set adds a $set operator to the Query filter for setting a field to a specific value.
+func (q *Query) Set(key string, value interface{}) *Query {
+	if existing, ok := q.Filter["$set"]; ok {
+		// If $set already exists, merge the new key-value into the existing map
+		existingMap := existing.(bson.M)
+		existingMap[key] = value
+	} else {
+		// Otherwise, create a new $set map
+		q.Filter["$set"] = bson.M{key: value}
+	}
+	return q
+}
+
+// Incr adds an $inc operator to the Query filter for incrementing a field's value.
+func (q *Query) Incr(key string, value interface{}) *Query {
+	if existing, ok := q.Filter["$inc"]; ok {
+		// If $inc already exists, merge the new key-value into the existing map
+		existingMap := existing.(bson.M)
+		existingMap[key] = value
+	} else {
+		// Otherwise, create a new $inc map
+		q.Filter["$inc"] = bson.M{key: value}
+	}
+	return q
+}
