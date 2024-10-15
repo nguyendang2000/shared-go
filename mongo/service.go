@@ -89,7 +89,7 @@ func (inst *Service) Ping(ctx context.Context) error {
 	return nil
 }
 
-// Database returns a MongoDB database instance by name
-func (inst *Service) Database(dbName string) *mongo.Database {
-	return inst.client.Database(dbName)
+// Client returns the MongoDB client instance
+func (inst *Service) Client() *mongo.Client {
+	return inst.client
 }

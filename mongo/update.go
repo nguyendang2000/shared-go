@@ -17,7 +17,7 @@ func (inst *Service) UpdateOne(dbName, collectionName string, query *Query, upda
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Set upsert option
 	updateOptions := options.Update().SetUpsert(upsert)
@@ -40,7 +40,7 @@ func (inst *Service) UpdateMany(dbName, collectionName string, query *Query, upd
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Set upsert option
 	updateOptions := options.Update().SetUpsert(upsert)

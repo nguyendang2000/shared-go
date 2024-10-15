@@ -14,7 +14,7 @@ func (inst *Service) DeleteOne(dbName, collectionName string, query *Query) erro
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Delete the document that matches the filter
 	_, err := collection.DeleteOne(ctx, query.Filter)
@@ -33,7 +33,7 @@ func (inst *Service) DeleteMany(dbName, collectionName string, query *Query) err
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Delete the documents that match the filter
 	_, err := collection.DeleteMany(ctx, query.Filter)

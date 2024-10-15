@@ -14,7 +14,7 @@ func (inst *Service) Count(dbName, collectionName string, query *Query) (int64, 
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Count the number of documents matching the query
 	count, err := collection.CountDocuments(ctx, query.Filter)

@@ -14,7 +14,7 @@ func (inst *Service) InsertOne(dbName, collectionName string, document interface
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Insert the document into the collection
 	_, err := collection.InsertOne(ctx, document)
@@ -33,7 +33,7 @@ func (inst *Service) InsertMany(dbName, collectionName string, documents ...inte
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Insert the documents into the collection
 	_, err := collection.InsertMany(ctx, documents)

@@ -20,7 +20,7 @@ func (inst *Service) FindOne(dbName, collectionName string, query *Query, result
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Execute FindOne and decode the result
 	err := collection.FindOne(ctx, query.Filter).Decode(result)
@@ -46,7 +46,7 @@ func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit
 	defer cancel()
 
 	// Get the collection from the specified database
-	collection := inst.Database(dbName).Collection(collectionName)
+	collection := inst.client.Database(dbName).Collection(collectionName)
 
 	// Set query options: limit, offset, and sorting
 	findOptions := options.Find()

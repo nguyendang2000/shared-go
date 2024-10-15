@@ -38,6 +38,6 @@ func NewService(conf Config) (*Service, error) {
 }
 
 // Client returns the MinIO client instance
-func (s *Service) Client() *minio.Client {
-	return s.client
+func (inst *Service) Client() *minio.Client {
+	return inst.client
 }
