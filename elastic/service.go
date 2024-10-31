@@ -217,35 +217,6 @@ func (inst *Service) Search(index string, query *Query, limit int64, offset int6
 	return nil
 }
 
-// SearchOne performs a search query on the specified index and retrieves a single matching document.
-// The document is unmarshaled into the specified result object. Returns an error if no document is found.
-func (inst *Service) SearchOne(index string, query *Query, result interface{}) error {
-	var results []map[string]interface{}
-
-	// Perform a search with limit 1 using the Search function
-	err := inst.Search(index, query, 1, 0, nil, &results)
-	if err != nil {
-		return fmt.Errorf("%w: %s", ErrSearchingDocuments, err)
-	}
-
-	// Ensure a document was found
-	if len(results) == 0 {
-		return ErrDocumentNotFound
-	}
-
-	// Marshal the first document and unmarshal into result
-	bts, err := json.Marshal(results[0])
-	if err != nil {
-		return fmt.Errorf("%w: %s", ErrMarshalingDocument, err)
-	}
-
-	if err = json.Unmarshal(bts, result); err != nil {
-		return fmt.Errorf("%w: %s", ErrAssigningDocument, err)
-	}
-
-	return nil
-}
-
 // DeleteByID deletes a document by its unique ID from the specified index.
 // Returns an error if the document could not be deleted.
 func (inst *Service) DeleteByID(index string, id string) error {
@@ -266,9 +237,9 @@ func (inst *Service) DeleteByID(index string, id string) error {
 	return nil
 }
 
-// DeleteDocuments deletes all documents in the specified index that match the provided query.
+// Delete deletes all documents in the specified index that match the provided query.
 // Returns an error if the delete-by-query operation encounters issues.
-func (inst *Service) DeleteDocuments(index string, query *Query) error {
+func (inst *Service) Delete(index string, query *Query) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Millisecond)
 	defer cancel()
 
