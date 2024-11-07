@@ -4,6 +4,7 @@ import "github.com/elastic/go-elasticsearch/v8/typedapi/types"
 
 // Query wraps an Elasticsearch query object, providing methods to build complex queries.
 type Query struct {
+	// q holds the underlying Elasticsearch query object.
 	q *types.Query
 }
 
@@ -138,7 +139,7 @@ func (inst *Query) Filter(queries ...*Query) *Query {
 	return inst
 }
 
-// Helper function to convert variadic []*Query to []types.Query
+// convertQueries is a helper function to convert variadic []*Query to []types.Query.
 func convertQueries(queries []*Query) []types.Query {
 	result := make([]types.Query, len(queries))
 	for i := range queries {

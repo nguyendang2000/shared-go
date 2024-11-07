@@ -6,7 +6,7 @@ import (
 
 // zapLogger implements the Logger interface using the Zap logging library.
 type zapLogger struct {
-	logger *zap.Logger
+	logger *zap.Logger // The Zap logger instance.
 }
 
 // newZapLogger initializes a Zap logger based on the provided configuration.
@@ -20,7 +20,7 @@ func newZapLogger(conf Config) Logger {
 		zapCfg = zap.NewDevelopmentConfig()
 	}
 
-	// Set log level
+	// Set log level based on configuration.
 	switch conf.Level {
 	case LogLevelDebug:
 		zapCfg.Level.SetLevel(zap.DebugLevel)
@@ -36,7 +36,7 @@ func newZapLogger(conf Config) Logger {
 		zapCfg.Level.SetLevel(zap.InfoLevel)
 	}
 
-	// Set output location
+	// Set output location if specified.
 	if conf.Output != LogOutputStdout && conf.Output != "" {
 		zapCfg.OutputPaths = []string{string(conf.Output)}
 	}
@@ -45,50 +45,62 @@ func newZapLogger(conf Config) Logger {
 	return &zapLogger{logger: logger}
 }
 
-func (l *zapLogger) Debug(msg string) {
-	l.logger.Debug(msg)
+// Debug logs a debug-level message.
+func (inst *zapLogger) Debug(msg string) {
+	inst.logger.Debug(msg)
 }
 
-func (l *zapLogger) Info(msg string) {
-	l.logger.Info(msg)
+// Info logs an info-level message.
+func (inst *zapLogger) Info(msg string) {
+	inst.logger.Info(msg)
 }
 
-func (l *zapLogger) Warn(msg string) {
-	l.logger.Warn(msg)
+// Warn logs a warning-level message.
+func (inst *zapLogger) Warn(msg string) {
+	inst.logger.Warn(msg)
 }
 
-func (l *zapLogger) Error(msg string) {
-	l.logger.Error(msg)
+// Error logs an error-level message.
+func (inst *zapLogger) Error(msg string) {
+	inst.logger.Error(msg)
 }
 
-func (l *zapLogger) Fatal(msg string) {
-	l.logger.Fatal(msg)
+// Fatal logs a fatal-level message and exits the application.
+func (inst *zapLogger) Fatal(msg string) {
+	inst.logger.Fatal(msg)
 }
 
-func (l *zapLogger) Panic(msg string) {
-	l.logger.Panic(msg)
+// Panic logs a panic-level message and panics.
+func (inst *zapLogger) Panic(msg string) {
+	inst.logger.Panic(msg)
 }
 
-func (l *zapLogger) Debugf(format string, args ...interface{}) {
-	l.logger.Sugar().Debugf(format, args...)
+// Debugf logs a formatted debug-level message.
+func (inst *zapLogger) Debugf(format string, args ...interface{}) {
+	inst.logger.Sugar().Debugf(format, args...)
 }
 
-func (l *zapLogger) Infof(format string, args ...interface{}) {
-	l.logger.Sugar().Infof(format, args...)
+// Infof logs a formatted info-level message.
+func (inst *zapLogger) Infof(format string, args ...interface{}) {
+	inst.logger.Sugar().Infof(format, args...)
 }
 
-func (l *zapLogger) Warnf(format string, args ...interface{}) {
-	l.logger.Sugar().Warnf(format, args...)
+// Warnf logs a formatted warning-level message.
+func (inst *zapLogger) Warnf(format string, args ...interface{}) {
+	inst.logger.Sugar().Warnf(format, args...)
 }
 
-func (l *zapLogger) Errorf(format string, args ...interface{}) {
-	l.logger.Sugar().Errorf(format, args...)
+// Errorf logs a formatted error-level message.
+func (inst *zapLogger) Errorf(format string, args ...interface{}) {
+	inst.logger.Sugar().Errorf(format, args...)
 }
 
-func (l *zapLogger) Fatalf(format string, args ...interface{}) {
-	l.logger.Sugar().Fatalf(format, args...)
+// Fatalf logs a formatted fatal-level message and exits the application.
+func (inst *zapLogger) Fatalf(format string, args ...interface{}) {
+	inst.logger.Sugar().Fatalf(format, args...)
 }
 
-func (l *zapLogger) Panicf(format string, args ...interface{}) {
-	l.logger.Sugar().Panicf(format, args...)
+// Panicf logs a formatted panic-level message and panics.
+func (inst *zapLogger) Panicf(format string, args ...interface{}) {
+	inst.logger.Sugar().Panicf(format, args...)
 }

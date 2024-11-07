@@ -1,8 +1,5 @@
 package minio
 
-// DefaultTimeout defines the default request timeout in seconds
-const DefaultTimeout int64 = 30 // 30 seconds
-
 // Config represents the configuration for MinIO connection
 type Config struct {
 	Address   string `yaml:"address"`    // The MinIO server address (e.g., play.min.io)
