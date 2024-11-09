@@ -4,13 +4,14 @@ import "go.mongodb.org/mongo-driver/bson"
 
 // Query is a wrapper around bson.M to help build MongoDB query filters.
 type Query struct {
-	Filter bson.M // The filter used to query documents
+	// Filter represents the filter used to query documents.
+	Filter bson.M
 }
 
 // NewQuery initializes and returns a new Query with an empty filter.
 func NewQuery() *Query {
 	return &Query{
-		Filter: bson.M{}, // Initialize an empty bson.M
+		Filter: bson.M{}, // Initialize an empty bson.M.
 	}
 }
 
@@ -109,11 +110,11 @@ func (q *Query) All(key string, values ...interface{}) *Query {
 // Set adds a $set operator to the Query filter for setting a field to a specific value.
 func (q *Query) Set(key string, value interface{}) *Query {
 	if existing, ok := q.Filter["$set"]; ok {
-		// If $set already exists, merge the new key-value into the existing map
+		// If $set already exists, merge the new key-value into the existing map.
 		existingMap := existing.(bson.M)
 		existingMap[key] = value
 	} else {
-		// Otherwise, create a new $set map
+		// Otherwise, create a new $set map.
 		q.Filter["$set"] = bson.M{key: value}
 	}
 	return q
@@ -122,11 +123,11 @@ func (q *Query) Set(key string, value interface{}) *Query {
 // Incr adds an $inc operator to the Query filter for incrementing a field's value.
 func (q *Query) Incr(key string, value interface{}) *Query {
 	if existing, ok := q.Filter["$inc"]; ok {
-		// If $inc already exists, merge the new key-value into the existing map
+		// If $inc already exists, merge the new key-value into the existing map.
 		existingMap := existing.(bson.M)
 		existingMap[key] = value
 	} else {
-		// Otherwise, create a new $inc map
+		// Otherwise, create a new $inc map.
 		q.Filter["$inc"] = bson.M{key: value}
 	}
 	return q
