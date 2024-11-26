@@ -8,10 +8,11 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-// AddToStream adds an entry to a Redis stream with the given values and returns the message ID.
-// By default, it uses an auto-generated ID unless a custom ID is provided.
+// AddToStream adds an entry to a Redis stream with the given values.
+// By default, an auto-generated ID is used unless a custom ID is provided.
+// It returns the message ID of the added entry or an error if the operation fails.
 func (inst *Service) AddToStream(stream string, values map[string]interface{}, id ...string) (string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
 	streamID := DefaultStreamID
@@ -33,14 +34,14 @@ func (inst *Service) AddToStream(stream string, values map[string]interface{}, i
 }
 
 // ReadFromStream reads entries from a Redis stream starting from a specific message ID.
-// Supports blocking and uses XRead. The `lastID` is optional and defaults to DefaultLastID.
-// Returns an empty slice if no messages are found.
+// It uses XRead and supports blocking. The `lastID` defaults to DefaultLastID if not provided.
+// Returns the read messages or an error if the operation fails.
 func (inst *Service) ReadFromStream(stream string, count int64, block time.Duration, lastID string) ([]redis.XMessage, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), block+time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	if lastID == "" {
-		lastID = DefaultLastID // Default for XRead
+		lastID = DefaultLastID
 	}
 
 	result, err := inst.client.XRead(ctx, &redis.XReadArgs{
@@ -54,7 +55,6 @@ func (inst *Service) ReadFromStream(stream string, count int64, block time.Durat
 	}
 
 	var messages []redis.XMessage
-
 	if len(result) > 0 {
 		messages = result[0].Messages
 	}
@@ -62,16 +62,15 @@ func (inst *Service) ReadFromStream(stream string, count int64, block time.Durat
 	return messages, nil
 }
 
-// ReadGroupFromStream reads entries from a Redis stream within a consumer group, starting from a specific message ID.
-// Supports blocking and uses XReadGroup. The `lastID` is optional and defaults to DefaultGroupLastID.
-// Optionally, it can auto-acknowledge messages upon reading.
-// Returns an empty slice if no messages are found.
+// ReadGroupFromStream reads entries from a Redis stream within a consumer group.
+// It uses XReadGroup and supports blocking. The `lastID` defaults to DefaultGroupLastID if not provided.
+// Optionally, messages can be auto-acknowledged after reading. Returns the read messages or an error if the operation fails.
 func (inst *Service) ReadGroupFromStream(stream, group, consumer string, count int64, block time.Duration, lastID string, autoAck bool) ([]redis.XMessage, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), block+time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	if lastID == "" {
-		lastID = DefaultGroupLastID // Default for XReadGroup
+		lastID = DefaultGroupLastID
 	}
 
 	result, err := inst.client.XReadGroup(ctx, &redis.XReadGroupArgs{
@@ -87,7 +86,6 @@ func (inst *Service) ReadGroupFromStream(stream, group, consumer string, count i
 	}
 
 	var messages []redis.XMessage
-
 	if len(result) > 0 {
 		messages = result[0].Messages
 	}
@@ -105,9 +103,9 @@ func (inst *Service) ReadGroupFromStream(stream, group, consumer string, count i
 }
 
 // AcknowledgeMessage acknowledges a message in a consumer group by its ID.
-// It returns the number of messages acknowledged or an error if the operation fails.
+// It returns the number of acknowledged messages or an error if the operation fails.
 func (inst *Service) AcknowledgeMessage(stream, group, id string) (int64, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
 	result, err := inst.client.XAck(ctx, stream, group, id).Result()
@@ -118,15 +116,14 @@ func (inst *Service) AcknowledgeMessage(stream, group, id string) (int64, error)
 	return result, nil
 }
 
-// CreateConsumerGroup creates a consumer group for a Redis stream with the given group name.
-// The starting ID defaults to DefaultStartID but can be customized.
-// It returns an error if the group cannot be created.
+// CreateConsumerGroup creates a new consumer group for a Redis stream.
+// The starting ID defaults to DefaultStartID if not provided. Returns an error if the operation fails.
 func (inst *Service) CreateConsumerGroup(stream, group, startID string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
 	if startID == "" {
-		startID = DefaultStartID // Default start ID
+		startID = DefaultStartID
 	}
 
 	err := inst.client.XGroupCreateMkStream(ctx, stream, group, startID).Err()
@@ -138,14 +135,14 @@ func (inst *Service) CreateConsumerGroup(stream, group, startID string) error {
 }
 
 // ClaimPendingMessages claims pending messages in a consumer group that have exceeded the minimum idle time.
-// If `count` is less than or equal to 0, it defaults to DefaultClaimCount. It leverages XAutoClaim to claim messages automatically.
-// Optionally, it can auto-acknowledge the claimed messages after processing.
+// If `count` is less than or equal to 0, DefaultClaimCount is used. Uses XAutoClaim for claiming messages.
+// Optionally, messages can be auto-acknowledged after claiming. Returns the claimed messages, the new start ID, or an error.
 func (inst *Service) ClaimPendingMessages(stream, group, consumer string, minIdleTime time.Duration, startID string, count int64, autoAck bool) ([]redis.XMessage, string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
 	if count <= 0 {
-		count = DefaultClaimCount // Default count
+		count = DefaultClaimCount
 	}
 
 	result, start, err := inst.client.XAutoClaim(ctx, &redis.XAutoClaimArgs{

@@ -2,14 +2,31 @@ package redis
 
 import "crypto/tls"
 
-// Config holds the configuration options required to connect to a Redis instance.
-// It includes YAML tags for easy configuration using a YAML file.
+// Config represents the configuration settings for connecting to a Redis instance.
+// This struct supports YAML-based configuration for seamless integration with external config files.
 type Config struct {
-	Address      string      `yaml:"address"`        // Redis server address in the format "host:port"
-	Password     string      `yaml:"password"`       // Redis password (optional)
-	DB           int         `yaml:"db"`             // Redis database number (default 0)
-	TLSConfig    *tls.Config `yaml:"tls_config"`     // TLS configuration for secure connections (optional)
-	PoolSize     int         `yaml:"pool_size"`      // Maximum number of connections in the connection pool
-	MinIdleConns int         `yaml:"min_idle_conns"` // Minimum number of idle connections in the pool
-	Timeout      int64       `yaml:"timeout"`        // Timeout for connection operations, in seconds
+	// Address specifies the Redis server address in the format "host:port".
+	Address string `yaml:"address"`
+
+	// Password provides the optional password for authenticating with the Redis server.
+	Password string `yaml:"password"`
+
+	// DB indicates the Redis database number to use. The default database is 0.
+	DB int `yaml:"db"`
+
+	// TLSConfig contains the TLS settings for establishing secure connections.
+	// This field is optional and should be set only when a secure connection is required.
+	TLSConfig *tls.Config `yaml:"tls_config"`
+
+	// PoolSize defines the maximum number of connections allowed in the Redis connection pool.
+	// A larger pool size can handle more concurrent requests but consumes more resources.
+	PoolSize int `yaml:"pool_size"`
+
+	// MinIdleConns specifies the minimum number of idle connections to maintain in the pool.
+	// Keeping idle connections pre-warmed improves response times for new requests.
+	MinIdleConns int `yaml:"min_idle_conns"`
+
+	// Timeout sets the maximum time, in seconds, for connection operations before they fail.
+	// This includes connection attempts and read/write operations.
+	Timeout int64 `yaml:"timeout"`
 }
