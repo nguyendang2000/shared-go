@@ -1,6 +1,10 @@
 package mongo
 
-import "go.mongodb.org/mongo-driver/bson"
+import (
+	"strings"
+
+	"go.mongodb.org/mongo-driver/bson"
+)
 
 // Query is a wrapper around bson.M to help build MongoDB query filters.
 type Query struct {
@@ -89,9 +93,9 @@ func (q *Query) Ne(key string, value interface{}) *Query {
 	return q
 }
 
-// Regex adds a $regex (Regular Expression) operator to the Query filter for pattern matching.
-func (q *Query) Regex(key string, pattern string) *Query {
-	q.Filter[key] = bson.M{"$regex": pattern}
+// Regex adds a $regex operator to the Query filter for matching strings based on a regular expression pattern.
+func (q *Query) Regex(key string, pattern string, options ...string) *Query {
+	q.Filter[key] = bson.M{"$regex": pattern, "$options": strings.Join(options, "")}
 	return q
 }
 
