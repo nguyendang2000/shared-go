@@ -44,9 +44,10 @@ func NewService(ctx context.Context, conf Config, lg logger.Logger) (*Service, e
 		logger:         lg,
 	}
 
-	// Close the service when the context is canceled.
+	// Flush buffers and close the service when the context is canceled.
 	go func() {
 		<-ctx.Done()
+		service.Flush()
 		service.Close()
 	}()
 
@@ -66,6 +67,16 @@ func (inst *Service) Client() *kgo.Client {
 // It returns an error if the ping fails.
 func (inst *Service) Ping() error {
 	if err := inst.client.Ping(inst.context); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Flush ensures that all pending messages in the Kafka client's internal buffer
+// are sent to Kafka before returning. This is useful for ensuring message delivery
+// during shutdown or low throughput scenarios.
+func (inst *Service) Flush() error {
+	if err := inst.client.Flush(context.Background()); err != nil {
 		return err
 	}
 	return nil
