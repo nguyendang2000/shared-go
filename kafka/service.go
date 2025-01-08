@@ -32,6 +32,10 @@ func NewService(ctx context.Context, conf Config, lg logger.Logger) (*Service, e
 		options = append(options, kgo.ConsumerGroup(conf.ConsumerGroup))
 	}
 
+	if conf.AutoTopicCreation {
+		options = append(options, kgo.AllowAutoTopicCreation())
+	}
+
 	client, err := kgo.NewClient(options...)
 	if err != nil {
 		return nil, fmt.Errorf(ErrKafkaClientSetup, err)
