@@ -9,9 +9,11 @@ import (
 )
 
 // SearchByID retrieves a single document by its unique ID from the specified index.
-// Unmarshals the document into the provided result object. Returns an error if the document is not found.
+// The document is unmarshaled into the provided result object, which must implement the Document interface.
+// If the document is not found, an error is returned.
 func (inst *Service) SearchByID(index string, id string, result Document) error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Millisecond)
+	// Set a timeout for the request using the configured timeout value
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Millisecond)
 	defer cancel()
 
 	// Attempt to retrieve the document by ID
@@ -25,20 +27,23 @@ func (inst *Service) SearchByID(index string, id string, result Document) error 
 		return fmt.Errorf(ErrDocumentNotFound, id, index)
 	}
 
-	// Unmarshal the source into the result object
+	// Unmarshal the source data into the provided result object
 	if err := json.Unmarshal(response.Source_, result); err != nil {
 		return fmt.Errorf(ErrUnmarshalingDocument, err)
 	}
 
+	// Set the document ID
 	result.SetID(response.Id_)
 
 	return nil
 }
 
 // Search performs a search query on the specified index with pagination and sorting options.
-// The matching documents are unmarshaled into the specified result slice, and document IDs are set.
+// The matching documents are unmarshaled into the specified result slice, and document IDs are assigned.
+// The result parameter must be a pointer to a slice of a type that implements the Document interface.
 func (inst *Service) Search(index string, query *Query, limit int64, offset int64, sort []string, result interface{}) error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Millisecond)
+	// Set a timeout for the request using the configured timeout value
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Millisecond)
 	defer cancel()
 
 	// Prepare sorting options based on field prefixes
@@ -55,13 +60,13 @@ func (inst *Service) Search(index string, query *Query, limit int64, offset int6
 		}
 	}
 
-	// Execute the search request with pagination and sorting
+	// Execute the search request with pagination and sorting options
 	response, err := inst.client.Search().Index(index).Query(query.q).Size(int(limit)).From(int(offset)).Sort(sortOptions).Do(ctx)
 	if err != nil {
 		return fmt.Errorf(ErrSearchingDocuments, err)
 	}
 
-	// Ensure result is a pointer to a slice of Document
+	// Ensure the result is a pointer to a slice of Document
 	resultVal := reflect.ValueOf(result)
 	if resultVal.Kind() != reflect.Ptr || resultVal.Elem().Kind() != reflect.Slice {
 		return fmt.Errorf("result must be a pointer to a slice")
@@ -75,12 +80,12 @@ func (inst *Service) Search(index string, query *Query, limit int64, offset int6
 		return fmt.Errorf("result slice elements must implement the Document interface")
 	}
 
-	// Iterate through search hits
+	// Iterate through search hits and populate the result slice
 	for _, hit := range response.Hits.Hits {
-		// Create a new instance of *Test
+		// Create a new instance of the slice element type
 		newElem := reflect.New(elemType.Elem()).Interface() // Creates *Test
 
-		// Unmarshal JSON response into *Test
+		// Unmarshal JSON response into the new instance
 		if err := json.Unmarshal(hit.Source_, newElem); err != nil {
 			return fmt.Errorf(ErrUnmarshalingDocuments, err)
 		}

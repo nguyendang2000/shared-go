@@ -1,11 +1,11 @@
 package elastic
 
-// Document represents an interface for documents that can be stored in an Elasticsearch index.
-// It includes methods for retrieving and setting the document's ID.
+// Document defines the interface for documents stored in an Elasticsearch index.
+// It provides methods to retrieve and assign a document's unique identifier.
 type Document interface {
-	// GetID retrieves the document's ID.
+	// GetID returns the unique identifier of the document.
 	GetID() string
 
-	// SetID sets the document's ID.
+	// SetID assigns a unique identifier to the document.
 	SetID(id string)
 }

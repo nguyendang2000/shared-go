@@ -15,7 +15,7 @@ var (
 	// ErrIndexingDocument represents an error when indexing a document fails.
 	ErrIndexingDocument = "failed to index document: %w"
 	// ErrIndexingDocuments represents an error when indexing multiple documents fails.
-	ErrIndexingDocuments = "failed to index multiple documents: %s"
+	ErrIndexingDocuments = "failed to index multiple documents: %w"
 	// ErrMarshalingDocument represents an error when marshaling a document fails.
 	ErrMarshalingDocument = "failed to marshal document: %w"
 	// ErrAssigningDocument represents an error when assigning a document to the result fails.
@@ -31,7 +31,7 @@ var (
 	// ErrGettingDocument represents an error when retrieving a document fails.
 	ErrGettingDocument = "failed to get document: %w"
 	// ErrDocumentNotFound represents an error when a document is not found in the specified index.
-	ErrDocumentNotFound = "document with id %s not found in index %s"
+	ErrDocumentNotFound = "document with ID %s not found in index %s"
 	// ErrUnmarshalingDocument represents an error when unmarshaling a document into the result fails.
 	ErrUnmarshalingDocument = "failed to unmarshal document into result: %w"
 	// ErrUnmarshalingDocuments represents an error when unmarshaling multiple documents fails.
@@ -45,7 +45,7 @@ var (
 	// ErrDeletingDocuments represents an error when deleting documents by query fails.
 	ErrDeletingDocuments = "failed to delete documents by query: %w"
 	// ErrDocumentNotDeleted represents an error when a document is not found or could not be deleted in the specified index.
-	ErrDocumentNotDeleted = "document with id %s not found or could not be deleted in specified index %s"
+	ErrDocumentNotDeleted = "document with ID %s not found or could not be deleted in index %s"
 )
 
 // Search and Query Errors
