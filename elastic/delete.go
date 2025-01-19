@@ -2,6 +2,7 @@ package elastic
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -17,12 +18,12 @@ func (inst *Service) DeleteByID(index string, id string) error {
 	// Execute delete request by document ID
 	response, err := inst.client.Delete(index, id).Do(ctx)
 	if err != nil {
-		return fmt.Errorf("%w: %s", ErrDeletingDocument, err)
+		return fmt.Errorf(ErrDeletingDocument, err)
 	}
 
 	// Ensure the document was deleted
 	if response.Result != result.Deleted {
-		return fmt.Errorf("%w with ID %s in index %s", ErrDocumentNotDeleted, id, index)
+		return fmt.Errorf(ErrDocumentNotDeleted, id, index)
 	}
 
 	return nil
@@ -37,12 +38,12 @@ func (inst *Service) Delete(index string, query *Query) error {
 	// Execute the delete-by-query request
 	response, err := inst.client.DeleteByQuery(index).Query(query.q).Do(ctx)
 	if err != nil {
-		return fmt.Errorf("%w: %s", ErrDeletingDocuments, err)
+		return fmt.Errorf(ErrDeletingDocuments, err)
 	}
 
 	// Check for errors in the delete response
 	if len(response.Failures) > 0 {
-		return fmt.Errorf("%w: encountered failures during delete-by-query", ErrDeletingDocuments)
+		return errors.New("encountered failures during delete-by-query")
 	}
 
 	return nil

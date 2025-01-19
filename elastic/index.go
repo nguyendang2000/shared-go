@@ -18,7 +18,7 @@ func (inst *Service) IndexOne(index string, doc Document) error {
 	// Attempt to index the document with the specified ID
 	_, err := inst.client.Index(index).Id(doc.GetID()).Request(doc).Do(ctx)
 	if err != nil {
-		return fmt.Errorf("%w: %s", ErrIndexingDocument, err)
+		return fmt.Errorf(ErrIndexingDocument, err)
 	}
 
 	return nil
@@ -46,7 +46,7 @@ func (inst *Service) Index(index string, docs []Document) error {
 	// Execute the bulk indexing request
 	response, err := bulkRequest.Do(ctx)
 	if err != nil {
-		return fmt.Errorf("%w: %s", ErrIndexingDocuments, err)
+		return fmt.Errorf(ErrIndexingDocuments, err)
 	}
 
 	// Aggregate any errors in the bulk response items
@@ -61,7 +61,7 @@ func (inst *Service) Index(index string, docs []Document) error {
 
 	// If there were any bulk errors, return a combined error message
 	if len(bulkErrors) > 0 {
-		return fmt.Errorf("%w: %s", ErrIndexingDocuments, strings.Join(bulkErrors, "; "))
+		return fmt.Errorf(ErrIndexingDocuments, strings.Join(bulkErrors, "; "))
 	}
 
 	return nil

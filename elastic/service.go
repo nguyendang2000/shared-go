@@ -2,6 +2,7 @@ package elastic
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"time"
@@ -20,7 +21,7 @@ type Service struct {
 // Returns an error if required configuration fields are missing or if the client cannot be created.
 func NewService(conf Config) (*Service, error) {
 	if len(conf.Addresses) == 0 {
-		return nil, ErrNoAddresses
+		return nil, errors.New(ErrNoAddresses)
 	}
 
 	// Prepare Elasticsearch configuration
@@ -39,7 +40,7 @@ func NewService(conf Config) (*Service, error) {
 	if conf.CACert != "" {
 		caCert, err := os.ReadFile(conf.CACert)
 		if err != nil {
-			return nil, ErrOpeningCACert
+			return nil, fmt.Errorf(ErrOpeningCACert, err)
 		}
 		esConfig.CACert = caCert
 	}
@@ -53,7 +54,7 @@ func NewService(conf Config) (*Service, error) {
 	// Create Elasticsearch client
 	client, err := elasticsearch.NewTypedClient(esConfig)
 	if err != nil {
-		return nil, ErrCreatingElasticClient
+		return nil, fmt.Errorf(ErrCreatingElasticClient, err)
 	}
 
 	return &Service{client: client, timeout: timeout}, nil
@@ -74,7 +75,7 @@ func (inst *Service) Count(index string, query *Query) (int64, error) {
 		Query: query.q,
 	}).Do(ctx)
 	if err != nil {
-		return 0, fmt.Errorf("%w: %s", ErrCountingDocuments, err)
+		return 0, fmt.Errorf(ErrCountingDocuments, err)
 	}
 
 	return response.Count, nil

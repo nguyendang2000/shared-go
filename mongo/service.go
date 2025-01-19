@@ -96,25 +96,6 @@ func (inst *Service) Client() *mongo.Client {
 	return inst.client
 }
 
-// Count returns the number of documents matching the given query.
-// It uses the timeout field from the Service struct.
-func (inst *Service) Count(dbName, collectionName string, query *Query) (int64, error) {
-	// Use the timeout from the Service struct
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
-	defer cancel()
-
-	// Get the collection from the specified database
-	collection := inst.client.Database(dbName).Collection(collectionName)
-
-	// Count the number of documents matching the query
-	count, err := collection.CountDocuments(ctx, query.Filter)
-	if err != nil {
-		return 0, fmt.Errorf(ErrFailedToCountDocuments, err)
-	}
-
-	return count, nil
-}
-
 // Exists checks whether a document matching the provided query filter exists in the collection.
 // It returns a boolean indicating the existence of the document and an error if any occurs during execution.
 func (inst *Service) Exists(dbName, collectionName string, query *Query) (bool, error) {

@@ -17,17 +17,17 @@ func (inst *Service) SearchByID(index string, id string, result Document) error 
 	// Attempt to retrieve the document by ID
 	response, err := inst.client.Get(index, id).Do(ctx)
 	if err != nil {
-		return fmt.Errorf("%w: %s", ErrGettingDocument, err)
+		return fmt.Errorf(ErrGettingDocument, err)
 	}
 
 	// Check if the document was found
 	if !response.Found {
-		return fmt.Errorf("%w with ID %s in index %s", ErrDocumentNotFound, id, index)
+		return fmt.Errorf(ErrDocumentNotFound, id, index)
 	}
 
 	// Unmarshal the source into the result object
 	if err := json.Unmarshal(response.Source_, result); err != nil {
-		return fmt.Errorf("%w: %s", ErrUnmarshalingDocument, err)
+		return fmt.Errorf(ErrUnmarshalingDocument, err)
 	}
 
 	result.SetID(response.Id_)
@@ -58,7 +58,7 @@ func (inst *Service) Search(index string, query *Query, limit int64, offset int6
 	// Execute the search request with pagination and sorting
 	response, err := inst.client.Search().Index(index).Query(query.q).Size(int(limit)).From(int(offset)).Sort(sortOptions).Do(ctx)
 	if err != nil {
-		return fmt.Errorf("%w: %s", ErrSearchingDocuments, err)
+		return fmt.Errorf(ErrSearchingDocuments, err)
 	}
 
 	// Ensure result is a pointer to a slice of Document
@@ -82,7 +82,7 @@ func (inst *Service) Search(index string, query *Query, limit int64, offset int6
 
 		// Unmarshal JSON response into *Test
 		if err := json.Unmarshal(hit.Source_, newElem); err != nil {
-			return fmt.Errorf("%w: %s", ErrUnmarshalingDocuments, err)
+			return fmt.Errorf(ErrUnmarshalingDocuments, err)
 		}
 
 		// If the type implements Document, set its ID

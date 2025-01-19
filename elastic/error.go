@@ -1,69 +1,67 @@
 package elastic
 
-import "errors"
-
 // Configuration Errors
 var (
-	// ErrNoAddresses is returned when no addresses are provided in the configuration.
-	ErrNoAddresses = errors.New("no addresses provided in the configuration")
-	// ErrOpeningCACert is returned when there is an error opening the CA certificate file.
-	ErrOpeningCACert = errors.New("error opening CA certificate file")
-	// ErrCreatingElasticClient is returned when there is an error creating the Elasticsearch client.
-	ErrCreatingElasticClient = errors.New("error creating Elasticsearch client")
+	// ErrNoAddresses represents an error when no addresses are provided in the configuration.
+	ErrNoAddresses = "no addresses provided in the configuration"
+	// ErrOpeningCACert represents an error when there is an issue opening the CA certificate file.
+	ErrOpeningCACert = "error opening CA certificate file: %w"
+	// ErrCreatingElasticClient represents an error when creating the Elasticsearch client fails.
+	ErrCreatingElasticClient = "error creating Elasticsearch client: %w"
 )
 
 // Indexing Errors
 var (
-	// ErrIndexingDocument is returned when indexing a document fails.
-	ErrIndexingDocument = errors.New("failed to index document")
-	// ErrIndexingDocuments is returned when indexing multiple documents fails.
-	ErrIndexingDocuments = errors.New("failed to index multiple documents")
-	// ErrMarshalingDocument is returned when marshaling a document fails.
-	ErrMarshalingDocument = errors.New("failed to marshal document")
-	// ErrAssigningDocument is returned when assigning a document to the result fails.
-	ErrAssigningDocument = errors.New("failed to assign document to result")
-	// ErrMarshalingDocuments is returned when marshaling multiple documents fails.
-	ErrMarshalingDocuments = errors.New("failed to marshal documents")
-	// ErrAssigningDocuments is returned when assigning multiple documents to the result fails.
-	ErrAssigningDocuments = errors.New("failed to assign documents to result")
+	// ErrIndexingDocument represents an error when indexing a document fails.
+	ErrIndexingDocument = "failed to index document: %w"
+	// ErrIndexingDocuments represents an error when indexing multiple documents fails.
+	ErrIndexingDocuments = "failed to index multiple documents: %s"
+	// ErrMarshalingDocument represents an error when marshaling a document fails.
+	ErrMarshalingDocument = "failed to marshal document: %w"
+	// ErrAssigningDocument represents an error when assigning a document to the result fails.
+	ErrAssigningDocument = "failed to assign document to result: %w"
+	// ErrMarshalingDocuments represents an error when marshaling multiple documents fails.
+	ErrMarshalingDocuments = "failed to marshal documents: %w"
+	// ErrAssigningDocuments represents an error when assigning multiple documents to the result fails.
+	ErrAssigningDocuments = "failed to assign documents to result: %w"
 )
 
 // Document Retrieval Errors
 var (
-	// ErrGettingDocument is returned when retrieving a document fails.
-	ErrGettingDocument = errors.New("failed to get document")
-	// ErrDocumentNotFound is returned when a document is not found in the specified index.
-	ErrDocumentNotFound = errors.New("document not found in specified index")
-	// ErrUnmarshalingDocument is returned when unmarshaling a document into the result fails.
-	ErrUnmarshalingDocument = errors.New("failed to unmarshal document into result")
-	// ErrUnmarshalingDocuments is returned when unmarshaling multiple documents fails.
-	ErrUnmarshalingDocuments = errors.New("failed to unmarshal documents")
+	// ErrGettingDocument represents an error when retrieving a document fails.
+	ErrGettingDocument = "failed to get document: %w"
+	// ErrDocumentNotFound represents an error when a document is not found in the specified index.
+	ErrDocumentNotFound = "document with id %s not found in index %s"
+	// ErrUnmarshalingDocument represents an error when unmarshaling a document into the result fails.
+	ErrUnmarshalingDocument = "failed to unmarshal document into result: %w"
+	// ErrUnmarshalingDocuments represents an error when unmarshaling multiple documents fails.
+	ErrUnmarshalingDocuments = "failed to unmarshal documents: %w"
 )
 
 // Document Deletion Errors
 var (
-	// ErrDeletingDocument is returned when deleting a document fails.
-	ErrDeletingDocument = errors.New("failed to delete document")
-	// ErrDeletingDocuments is returned when deleting documents by query fails.
-	ErrDeletingDocuments = errors.New("failed to delete documents by query")
-	// ErrDocumentNotDeleted is returned when a document is not found or could not be deleted in the specified index.
-	ErrDocumentNotDeleted = errors.New("document not found or could not be deleted in specified index")
+	// ErrDeletingDocument represents an error when deleting a document fails.
+	ErrDeletingDocument = "failed to delete document: %w"
+	// ErrDeletingDocuments represents an error when deleting documents by query fails.
+	ErrDeletingDocuments = "failed to delete documents by query: %w"
+	// ErrDocumentNotDeleted represents an error when a document is not found or could not be deleted in the specified index.
+	ErrDocumentNotDeleted = "document with id %s not found or could not be deleted in specified index %s"
 )
 
 // Search and Query Errors
 var (
-	// ErrSearchingDocuments is returned when a search query fails to execute.
-	ErrSearchingDocuments = errors.New("failed to execute search query")
-	// ErrDecodingSearchResponse is returned when decoding a search response into the result fails.
-	ErrDecodingSearchResponse = errors.New("failed to decode search response into result")
-	// ErrCountingDocuments is returned when counting documents fails.
-	ErrCountingDocuments = errors.New("failed to count documents")
-	// ErrCheckingDocumentExists is returned when checking if a document exists fails.
-	ErrCheckingDocumentExists = errors.New("failed to check if document exists")
+	// ErrSearchingDocuments represents an error when a search query fails to execute.
+	ErrSearchingDocuments = "failed to execute search query: %w"
+	// ErrDecodingSearchResponse represents an error when decoding a search response into the result fails.
+	ErrDecodingSearchResponse = "failed to decode search response into result: %w"
+	// ErrCountingDocuments represents an error when counting documents fails.
+	ErrCountingDocuments = "failed to count documents: %w"
+	// ErrCheckingDocumentExists represents an error when checking if a document exists fails.
+	ErrCheckingDocumentExists = "failed to check if document exists: %w"
 )
 
 // General Errors
 var (
-	// ErrMarshalingSource is returned when marshaling a document source fails.
-	ErrMarshalingSource = errors.New("failed to marshal document source")
+	// ErrMarshalingSource represents an error when marshaling a document source fails.
+	ErrMarshalingSource = "failed to marshal document source: %w"
 )
