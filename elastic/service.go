@@ -65,7 +65,7 @@ func (inst *Service) Client() *elasticsearch.TypedClient {
 }
 
 // Count returns the number of documents in a specified index that match the provided query.
-func (inst *Service) Count(index string, query Query) (int64, error) {
+func (inst *Service) Count(index string, query *Query) (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Millisecond)
 	defer cancel()
 
@@ -78,19 +78,4 @@ func (inst *Service) Count(index string, query Query) (int64, error) {
 	}
 
 	return response.Count, nil
-}
-
-// Exists checks if there is at least one document in the specified index that matches the provided query.
-// Returns true if any matching document exists, false otherwise.
-func (inst *Service) Exists(index string, query *Query) (bool, error) {
-	var result []map[string]interface{}
-
-	// Perform a search with limit 1 to check for document existence
-	err := inst.Search(index, query, 1, 0, nil, &result)
-	if err != nil {
-		return false, fmt.Errorf("%w: %s", ErrCheckingDocumentExists, err)
-	}
-
-	// Return true if any document was found
-	return len(result) > 0, nil
 }

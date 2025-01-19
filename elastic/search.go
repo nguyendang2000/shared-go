@@ -75,24 +75,26 @@ func (inst *Service) Search(index string, query *Query, limit int64, offset int6
 		return fmt.Errorf("result slice elements must implement the Document interface")
 	}
 
-	// Populate result slice with documents, setting IDs
+	// Iterate through search hits
 	for _, hit := range response.Hits.Hits {
-		elem := reflect.New(elemType).Interface()
+		// Create a new instance of *Test
+		newElem := reflect.New(elemType.Elem()).Interface() // Creates *Test
 
-		// Unmarshal document data into the element
-		if err := json.Unmarshal(hit.Source_, elem); err != nil {
+		// Unmarshal JSON response into *Test
+		if err := json.Unmarshal(hit.Source_, newElem); err != nil {
 			return fmt.Errorf("%w: %s", ErrUnmarshalingDocuments, err)
 		}
 
-		// Set document ID using SetID
-		doc := elem.(Document)
-		doc.SetID(*hit.Id_)
+		// If the type implements Document, set its ID
+		if doc, ok := newElem.(Document); ok {
+			doc.SetID(*hit.Id_)
+		}
 
-		// Append the populated element to the result slice
-		resultSlice = reflect.Append(resultSlice, reflect.ValueOf(elem).Elem())
+		// Append the new instance to the result slice
+		resultSlice = reflect.Append(resultSlice, reflect.ValueOf(newElem))
 	}
 
-	// Set the modified result slice back to the original result pointer
+	// Set the modified slice back to the result pointer
 	resultVal.Elem().Set(resultSlice)
 
 	return nil
