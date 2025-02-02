@@ -17,6 +17,7 @@ import (
 type Service struct {
 	client  *mongo.Client
 	timeout int64 // Timeout in seconds for requests
+	context context.Context
 }
 
 // NewService initializes a new MongoDB connection using the given configuration
@@ -64,20 +65,21 @@ func NewService(ctx context.Context, conf Config) (*Service, error) {
 	service := &Service{
 		client:  client,
 		timeout: timeout,
+		context: ctx,
 	}
 
 	// Goroutine to listen for context cancellation and close MongoDB connection
 	go func() {
-		<-ctx.Done()                        // Wait for the context to be canceled
-		service.Close(context.Background()) // Close the MongoDB connection
+		<-service.context.Done() // Wait for the context to be canceled
+		service.Close()          // Close the MongoDB connection
 	}()
 
 	return service, nil
 }
 
 // Close closes the MongoDB client connection
-func (inst *Service) Close(ctx context.Context) error {
-	if err := inst.client.Disconnect(ctx); err != nil {
+func (inst *Service) Close() error {
+	if err := inst.client.Disconnect(context.Background()); err != nil {
 		return fmt.Errorf("failed to close MongoDB connection: %v", err)
 	}
 	return nil

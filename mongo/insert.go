@@ -12,7 +12,7 @@ import (
 // It uses the timeout defined in the Service struct to create a context for the operation.
 func (inst *Service) InsertOne(dbName, collectionName string, document interface{}) error {
 	// Create a context with the specified timeout from the Service struct.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database.
@@ -31,7 +31,7 @@ func (inst *Service) InsertOne(dbName, collectionName string, document interface
 // It uses the timeout defined in the Service struct to create a context for the operation.
 func (inst *Service) InsertMany(dbName, collectionName string, documents ...interface{}) error {
 	// Create a context with the specified timeout from the Service struct.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database.
@@ -53,7 +53,7 @@ func (inst *Service) InsertMany(dbName, collectionName string, documents ...inte
 // Returns the number of successfully inserted documents and an error only if all insertions fail.
 func (inst *Service) InsertManyUnordered(dbName, collectionName string, documents ...interface{}) (int64, error) {
 	// Create a context with the specified timeout from the Service struct.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database.

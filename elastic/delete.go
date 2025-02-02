@@ -13,7 +13,7 @@ import (
 // It returns an error if the document is not found or could not be deleted.
 func (inst *Service) DeleteByID(index string, id string) error {
 	// Set a timeout for the request using the configured timeout value
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Execute delete request by document ID
@@ -34,7 +34,7 @@ func (inst *Service) DeleteByID(index string, id string) error {
 // It executes a delete-by-query operation and returns an error if the operation fails.
 func (inst *Service) Delete(index string, query *Query) error {
 	// Set a timeout for the request using the configured timeout value
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Millisecond)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Execute the delete-by-query request

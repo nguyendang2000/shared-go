@@ -1,6 +1,7 @@
 package minio
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/minio/minio-go/v7"
@@ -11,12 +12,13 @@ import (
 type Service struct {
 	client  *minio.Client // The MinIO client instance.
 	timeout int64         // Timeout in seconds for requests.
+	context context.Context
 }
 
 // NewService initializes a new MinIO connection using the given configuration
 // and sets the timeout in the Service struct.
 // It returns an error if the MinIO client cannot be initialized.
-func NewService(conf Config) (*Service, error) {
+func NewService(ctx context.Context, conf Config) (*Service, error) {
 	// Set timeout to DefaultTimeout if not provided or less than 0.
 	timeout := conf.Timeout
 	if timeout <= 0 {
@@ -29,12 +31,13 @@ func NewService(conf Config) (*Service, error) {
 		Secure: conf.UseSSL,
 	})
 	if err != nil {
-		return nil, fmt.Errorf(ErrFailedToInitializeClient, err)
+		return nil, fmt.Errorf(ErrClientInitialization, err)
 	}
 
 	return &Service{
 		client:  minioClient,
 		timeout: timeout,
+		context: ctx,
 	}, nil
 }
 

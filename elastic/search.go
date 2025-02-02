@@ -13,7 +13,7 @@ import (
 // If the document is not found, an error is returned.
 func (inst *Service) SearchByID(index string, id string, result Document) error {
 	// Set a timeout for the request using the configured timeout value
-	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Millisecond)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Attempt to retrieve the document by ID
@@ -43,7 +43,7 @@ func (inst *Service) SearchByID(index string, id string, result Document) error 
 // The result parameter must be a pointer to a slice of a type that implements the Document interface.
 func (inst *Service) Search(index string, query *Query, limit int64, offset int64, sort []string, result interface{}) error {
 	// Set a timeout for the request using the configured timeout value
-	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Millisecond)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Prepare sorting options based on field prefixes

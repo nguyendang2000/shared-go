@@ -12,7 +12,7 @@ import (
 // IndexOne indexes or updates a single document in the specified index.
 // The document must implement the Document interface, which provides a unique ID.
 func (inst *Service) IndexOne(index string, doc Document) error {
-	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Millisecond)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Attempt to index the document with the specified ID
@@ -27,7 +27,7 @@ func (inst *Service) IndexOne(index string, doc Document) error {
 // Index indexes multiple documents in the specified index.
 // Each document must implement the Document interface, which provides a unique ID for each document.
 func (inst *Service) Index(index string, docs []Document) error {
-	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Millisecond)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Start a bulk request for multiple documents
