@@ -1,6 +1,6 @@
 module github.com/nguyendang2000/shared-go
 
-go 1.22.8
+go 1.23.5
 
 require (
 	github.com/elastic/go-elasticsearch/v8 v8.17.0
