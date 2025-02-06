@@ -63,7 +63,10 @@ func (inst *Service) InsertManyUnordered(dbName, collectionName string, document
 	res, err := collection.InsertMany(ctx, documents, options.InsertMany().SetOrdered(false))
 
 	// Count the successfully inserted documents.
-	insertedCount := int64(len(res.InsertedIDs))
+	var insertedCount int64
+	if res != nil {
+		insertedCount = int64(len(res.InsertedIDs))
+	}
 
 	// If some documents were inserted, return count without treating it as a complete failure.
 	// Only return an error if *none* of the documents were inserted.
