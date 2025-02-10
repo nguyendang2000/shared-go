@@ -34,6 +34,15 @@ const (
 	// ErrFailedToFindOne represents an error when a find one query fails.
 	ErrFailedToFindOne = "failed to execute find one query: %w"
 
+	// ErrFailedToFindOneAndDelete represents an error when a find one and delete query fails.
+	ErrFailedToFindOneAndDelete = "failed to execute find one and delete query: %w"
+
+	// ErrFailedToFindOneAndReplace represents an error when a find one and replace query fails.
+	ErrFailedToFindOneAndReplace = "failed to execute find one and replace query: %w"
+
+	// ErrFailedToFindOneAndUpdate represents an error when a find one and update query fails.
+	ErrFailedToFindOneAndUpdate = "failed to execute find one and update query: %w"
+
 	// ErrFailedToDeleteDocument represents an error when deleting a document from MongoDB fails.
 	ErrFailedToDeleteDocument = "failed to delete document: %w"
 

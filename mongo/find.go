@@ -13,8 +13,10 @@ import (
 )
 
 // FindOne retrieves a single document from the specified collection using the provided query filter.
-// The result is unmarshaled into the specified struct. It uses the timeout defined in the Service struct.
-func (inst *Service) FindOne(dbName, collectionName string, query *Query, result interface{}) error {
+// The result is unmarshaled into the specified result struct.
+// If no document matches the query, ErrDocumentNotFound is returned.
+// It uses the timeout defined in the Service struct to create a context for the operation.
+func (inst *Service) FindOne(dbName, collectionName string, query *Query, result interface{}, projection ...Projection) error {
 	// Create a context with the timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -22,25 +24,130 @@ func (inst *Service) FindOne(dbName, collectionName string, query *Query, result
 	// Get the collection from the specified database.
 	collection := inst.client.Database(dbName).Collection(collectionName)
 
-	// Execute FindOne and decode the result.
-	err := collection.FindOne(ctx, query.Filter).Decode(result)
+	// Prepare find options with projection if provided.
+	findOptions := make([]*options.FindOneOptions, 0)
+	if len(projection) > 0 {
+		findOptions = append(findOptions, options.FindOne().SetProjection(projection[0].parse()))
+	}
+
+	// Execute the FindOne operation and decode the result into the provided struct.
+	err := collection.FindOne(ctx, query.Filter, findOptions...).Decode(result)
 	if err != nil {
-		// Return ErrDocumentNotFound if no documents are found.
+		// Return ErrDocumentNotFound if no documents match the query.
 		if err == mongo.ErrNoDocuments {
 			return ErrDocumentNotFound
 		}
-		// Return other errors with context.
+		// Return other errors with additional context.
 		return fmt.Errorf(ErrFailedToFindOne, err)
 	}
 
-	// Return nil when the document is found and decoded.
+	// Return nil when the document is successfully found and decoded.
+	return nil
+}
+
+// FindOneAndDelete retrieves and deletes a single document from the specified collection using the provided query filter.
+// The deleted document is unmarshaled into the specified result struct.
+// If no document matches the query, ErrDocumentNotFound is returned.
+// It uses the timeout defined in the Service struct to create a context for the operation.
+func (inst *Service) FindOneAndDelete(dbName, collectionName string, query *Query, result interface{}, projection ...Projection) error {
+	// Create a context with the timeout from the Service struct.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	defer cancel()
+
+	// Get the collection from the specified database.
+	collection := inst.client.Database(dbName).Collection(collectionName)
+
+	// Prepare find and delete options with projection if provided.
+	findOptions := make([]*options.FindOneAndDeleteOptions, 0)
+	if len(projection) > 0 {
+		findOptions = append(findOptions, options.FindOneAndDelete().SetProjection(projection[0].parse()))
+	}
+
+	// Execute the FindOneAndDelete operation and decode the result into the provided struct.
+	err := collection.FindOneAndDelete(ctx, query.Filter, findOptions...).Decode(result)
+	if err != nil {
+		// Return ErrDocumentNotFound if no documents match the query.
+		if err == mongo.ErrNoDocuments {
+			return ErrDocumentNotFound
+		}
+		// Return other errors with additional context.
+		return fmt.Errorf(ErrFailedToFindOneAndDelete, err)
+	}
+
+	// Return nil when the document is successfully found, deleted, and decoded.
+	return nil
+}
+
+// FindOneAndReplace retrieves and replaces a single document in the specified collection using the provided query filter.
+// The original document (before replacement) is unmarshaled into the specified result struct.
+// If no document matches the query, ErrDocumentNotFound is returned.
+// It uses the timeout defined in the Service struct to create a context for the operation.
+func (inst *Service) FindOneAndReplace(dbName, collectionName string, query *Query, result interface{}, replacement interface{}, projection ...Projection) error {
+	// Create a context with the timeout from the Service struct.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	defer cancel()
+
+	// Get the collection from the specified database.
+	collection := inst.client.Database(dbName).Collection(collectionName)
+
+	// Prepare find and replace options with projection if provided.
+	findOptions := make([]*options.FindOneAndReplaceOptions, 0)
+	if len(projection) > 0 {
+		findOptions = append(findOptions, options.FindOneAndReplace().SetProjection(projection[0].parse()))
+	}
+
+	// Execute the FindOneAndReplace operation and decode the original document into the provided struct.
+	err := collection.FindOneAndReplace(ctx, query.Filter, replacement, findOptions...).Decode(result)
+	if err != nil {
+		// Return ErrDocumentNotFound if no documents match the query.
+		if err == mongo.ErrNoDocuments {
+			return ErrDocumentNotFound
+		}
+		// Return other errors with additional context.
+		return fmt.Errorf(ErrFailedToFindOneAndReplace, err)
+	}
+
+	// Return nil when the document is successfully found, replaced, and decoded.
+	return nil
+}
+
+// FindOneAndUpdate retrieves and updates a single document in the specified collection using the provided query filter.
+// The original document (before the update) is unmarshaled into the specified result struct.
+// If no document matches the query, ErrDocumentNotFound is returned.
+// It uses the timeout defined in the Service struct to create a context for the operation.
+func (inst *Service) FindOneAndUpdate(dbName, collectionName string, query *Query, update *Query, result interface{}, projection ...Projection) error {
+	// Create a context with the timeout from the Service struct.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	defer cancel()
+
+	// Get the collection from the specified database.
+	collection := inst.client.Database(dbName).Collection(collectionName)
+
+	// Prepare find and update options with projection if provided.
+	findOptions := make([]*options.FindOneAndUpdateOptions, 0)
+	if len(projection) > 0 {
+		findOptions = append(findOptions, options.FindOneAndUpdate().SetProjection(projection[0].parse()))
+	}
+
+	// Execute the FindOneAndUpdate operation and decode the original document into the provided struct.
+	err := collection.FindOneAndUpdate(ctx, query.Filter, update.Filter, findOptions...).Decode(result)
+	if err != nil {
+		// Return ErrDocumentNotFound if no documents match the query.
+		if err == mongo.ErrNoDocuments {
+			return ErrDocumentNotFound
+		}
+		// Return other errors with additional context.
+		return fmt.Errorf(ErrFailedToFindOneAndUpdate, err)
+	}
+
+	// Return nil when the document is successfully found, updated, and decoded.
 	return nil
 }
 
 // FindMany retrieves multiple documents from the specified collection using the provided query filter.
 // It allows the user to specify a limit, offset, sorting criteria, and unmarshals the results into the provided struct.
 // The function uses the timeout defined in the Service struct.
-func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit int64, offset int64, sort []string, result interface{}) error {
+func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit int64, offset int64, sort []string, result interface{}, projection ...Projection) error {
 	// Create a context with the timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -55,6 +162,9 @@ func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit
 	}
 	if offset > 0 {
 		findOptions.SetSkip(offset)
+	}
+	if len(projection) > 0 {
+		findOptions.SetProjection(projection[0].parse())
 	}
 
 	// Parse the sort parameter and convert it to MongoDB sort format.
@@ -97,7 +207,7 @@ func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit
 // FindAll retrieves all documents from a collection using pagination to avoid memory overload.
 // It iteratively calls FindMany in batches until all records are retrieved.
 // The function ensures that the result argument is a pointer to a slice.
-func (inst *Service) FindAll(dbName, collectionName string, query *Query, sort []string, batchSize int64, result interface{}) error {
+func (inst *Service) FindAll(dbName, collectionName string, query *Query, sort []string, batchSize int64, result interface{}, projection ...Projection) error {
 	// Set a default batch size if the provided batch size is 0 or less.
 	if batchSize <= 0 {
 		batchSize = DefaultBatchSize // Use the default batch size.
@@ -119,7 +229,7 @@ func (inst *Service) FindAll(dbName, collectionName string, query *Query, sort [
 		batchResult := batchResultPtr.Elem()
 
 		// Fetch a batch of documents.
-		err := inst.FindMany(dbName, collectionName, query, batchSize, offset, sort, batchResult.Addr().Interface())
+		err := inst.FindMany(dbName, collectionName, query, batchSize, offset, sort, batchResult.Addr().Interface(), projection...)
 		if err != nil {
 			return err
 		}
@@ -139,4 +249,24 @@ func (inst *Service) FindAll(dbName, collectionName string, query *Query, sort [
 	}
 
 	return nil
+}
+
+// Exists checks whether a document matching the provided query filter exists in the collection.
+// It returns a boolean indicating the existence of the document and an error if any occurs during execution.
+func (inst *Service) Exists(dbName, collectionName string, query *Query) (bool, error) {
+	var result bson.M // Placeholder for the result
+
+	// Use FindOne to check for the document
+	err := inst.FindOne(dbName, collectionName, query, &result)
+	if err != nil {
+		if errors.Is(err, ErrDocumentNotFound) {
+			// No document found, return false without error
+			return false, nil
+		}
+		// Return false and the error if any other issue occurs
+		return false, fmt.Errorf(ErrFailedToCheckExistence, err)
+	}
+
+	// Document found, return true
+	return true, nil
 }

@@ -2,12 +2,10 @@ package mongo
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -94,24 +92,4 @@ func (inst *Service) Ping(ctx context.Context) error {
 // Client returns the MongoDB client instance
 func (inst *Service) Client() *mongo.Client {
 	return inst.client
-}
-
-// Exists checks whether a document matching the provided query filter exists in the collection.
-// It returns a boolean indicating the existence of the document and an error if any occurs during execution.
-func (inst *Service) Exists(dbName, collectionName string, query *Query) (bool, error) {
-	var result bson.M // Placeholder for the result
-
-	// Use FindOne to check for the document
-	err := inst.FindOne(dbName, collectionName, query, &result)
-	if err != nil {
-		if errors.Is(err, ErrDocumentNotFound) {
-			// No document found, return false without error
-			return false, nil
-		}
-		// Return false and the error if any other issue occurs
-		return false, fmt.Errorf(ErrFailedToCheckExistence, err)
-	}
-
-	// Document found, return true
-	return true, nil
 }
