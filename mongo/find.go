@@ -16,7 +16,7 @@ import (
 // The result is unmarshaled into the specified result struct.
 // If no document matches the query, ErrDocumentNotFound is returned.
 // It uses the timeout defined in the Service struct to create a context for the operation.
-func (inst *Service) FindOne(dbName, collectionName string, query *Query, result interface{}, projection ...Projection) error {
+func (inst *Service) FindOne(dbName, collectionName string, query *Query, result interface{}, projection ...*Projection) error {
 	// Create a context with the timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -49,7 +49,7 @@ func (inst *Service) FindOne(dbName, collectionName string, query *Query, result
 // The deleted document is unmarshaled into the specified result struct.
 // If no document matches the query, ErrDocumentNotFound is returned.
 // It uses the timeout defined in the Service struct to create a context for the operation.
-func (inst *Service) FindOneAndDelete(dbName, collectionName string, query *Query, result interface{}, projection ...Projection) error {
+func (inst *Service) FindOneAndDelete(dbName, collectionName string, query *Query, result interface{}, projection ...*Projection) error {
 	// Create a context with the timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -82,7 +82,7 @@ func (inst *Service) FindOneAndDelete(dbName, collectionName string, query *Quer
 // The original document (before replacement) is unmarshaled into the specified result struct.
 // If no document matches the query, ErrDocumentNotFound is returned.
 // It uses the timeout defined in the Service struct to create a context for the operation.
-func (inst *Service) FindOneAndReplace(dbName, collectionName string, query *Query, result interface{}, replacement interface{}, projection ...Projection) error {
+func (inst *Service) FindOneAndReplace(dbName, collectionName string, query *Query, result interface{}, replacement interface{}, projection ...*Projection) error {
 	// Create a context with the timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -115,7 +115,7 @@ func (inst *Service) FindOneAndReplace(dbName, collectionName string, query *Que
 // The original document (before the update) is unmarshaled into the specified result struct.
 // If no document matches the query, ErrDocumentNotFound is returned.
 // It uses the timeout defined in the Service struct to create a context for the operation.
-func (inst *Service) FindOneAndUpdate(dbName, collectionName string, query *Query, update *Query, result interface{}, projection ...Projection) error {
+func (inst *Service) FindOneAndUpdate(dbName, collectionName string, query *Query, update *Query, result interface{}, projection ...*Projection) error {
 	// Create a context with the timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -147,7 +147,7 @@ func (inst *Service) FindOneAndUpdate(dbName, collectionName string, query *Quer
 // FindMany retrieves multiple documents from the specified collection using the provided query filter.
 // It allows the user to specify a limit, offset, sorting criteria, and unmarshals the results into the provided struct.
 // The function uses the timeout defined in the Service struct.
-func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit int64, offset int64, sort []string, result interface{}, projection ...Projection) error {
+func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit int64, offset int64, sort []string, result interface{}, projection ...*Projection) error {
 	// Create a context with the timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -207,7 +207,7 @@ func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit
 // FindAll retrieves all documents from a collection using pagination to avoid memory overload.
 // It iteratively calls FindMany in batches until all records are retrieved.
 // The function ensures that the result argument is a pointer to a slice.
-func (inst *Service) FindAll(dbName, collectionName string, query *Query, sort []string, batchSize int64, result interface{}, projection ...Projection) error {
+func (inst *Service) FindAll(dbName, collectionName string, query *Query, sort []string, batchSize int64, result interface{}, projection ...*Projection) error {
 	// Set a default batch size if the provided batch size is 0 or less.
 	if batchSize <= 0 {
 		batchSize = DefaultBatchSize // Use the default batch size.
