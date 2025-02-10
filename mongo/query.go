@@ -136,3 +136,55 @@ func (q *Query) Incr(key string, value interface{}) *Query {
 	}
 	return q
 }
+
+// AddToSet adds an $addToSet operator to the Query filter for adding a value to an array field.
+func (q *Query) AddToSet(key string, value interface{}) *Query {
+	if existing, ok := q.Filter["$addToSet"]; ok {
+		// If $addToSet already exists, merge the new key-value into the existing map.
+		existingMap := existing.(bson.M)
+		existingMap[key] = value
+	} else {
+		// Otherwise, create a new $addToSet map.
+		q.Filter["$addToSet"] = bson.M{key: value}
+	}
+	return q
+}
+
+// AddToSetEach adds multiple values to an array field using the $each modifier.
+func (q *Query) AddToSetEach(key string, values ...interface{}) *Query {
+	if existing, ok := q.Filter["$addToSet"]; ok {
+		// If $addToSet already exists, merge using $each.
+		existingMap := existing.(bson.M)
+		existingMap[key] = bson.M{"$each": values}
+	} else {
+		// Otherwise, create a new $addToSet with $each.
+		q.Filter["$addToSet"] = bson.M{key: bson.M{"$each": values}}
+	}
+	return q
+}
+
+// Push adds a $push operator to the Query filter for appending a value to an array field.
+func (q *Query) Push(key string, value interface{}) *Query {
+	if existing, ok := q.Filter["$push"]; ok {
+		// If $push already exists, merge the new key-value into the existing map.
+		existingMap := existing.(bson.M)
+		existingMap[key] = value
+	} else {
+		// Otherwise, create a new $push map.
+		q.Filter["$push"] = bson.M{key: value}
+	}
+	return q
+}
+
+// PushEach adds multiple values to an array field using the $each modifier.
+func (q *Query) PushEach(key string, values ...interface{}) *Query {
+	if existing, ok := q.Filter["$push"]; ok {
+		// If $push already exists, merge using $each.
+		existingMap := existing.(bson.M)
+		existingMap[key] = bson.M{"$each": values}
+	} else {
+		// Otherwise, create a new $push with $each.
+		q.Filter["$push"] = bson.M{key: bson.M{"$each": values}}
+	}
+	return q
+}

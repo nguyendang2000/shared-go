@@ -15,7 +15,7 @@ import (
 // and provides a timeout setting for request operations.
 type Service struct {
 	client  *elasticsearch.TypedClient // The Elasticsearch client for executing requests
-	timeout int64                      // Timeout duration in milliseconds for requests
+	timeout int64                      // Timeout duration in seconds for requests
 	context context.Context            // Context used for managing request timeouts
 }
 
@@ -79,7 +79,7 @@ func (inst *Service) Client() *elasticsearch.TypedClient {
 // The function uses the timeout field from the Service struct to set a request deadline.
 func (inst *Service) Count(index string, query *Query) (int64, error) {
 	// Set a timeout for the request using the configured timeout value
-	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Millisecond)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Execute the count request with the provided query

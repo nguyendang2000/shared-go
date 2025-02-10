@@ -23,7 +23,7 @@ type Config struct {
 	// This can be used to establish a secure connection with self-signed certificates.
 	CACert string `yaml:"ca_cert"`
 
-	// Timeout specifies the maximum time (in milliseconds) to wait for a connection.
+	// Timeout specifies the maximum time (in seconds) to wait for a connection.
 	// This field is optional, and if not set, the default timeout is used.
 	Timeout int64 `yaml:"timeout"`
 }

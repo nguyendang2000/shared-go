@@ -10,7 +10,7 @@ import (
 // It uses the timeout field from the Service struct.
 func (inst *Service) Count(dbName, collectionName string, query *Query) (int64, error) {
 	// Use the timeout from the Service struct
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database
@@ -30,7 +30,7 @@ func (inst *Service) Count(dbName, collectionName string, query *Query) (int64, 
 // It uses the timeout field from the Service struct.
 func (inst *Service) EstimatedDocumentCount(dbName, collectionName string) (int64, error) {
 	// Use the timeout from the Service struct
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database
@@ -50,7 +50,7 @@ func (inst *Service) EstimatedDocumentCount(dbName, collectionName string) (int6
 // This method uses the timeout field from the Service struct.
 func (inst *Service) Distinct(dbName, collectionName, fieldName string, query *Query) ([]interface{}, error) {
 	// Use the timeout from the Service struct
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database

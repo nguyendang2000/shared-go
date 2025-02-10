@@ -171,7 +171,7 @@ func (inst *Service) Consume() chan *kgo.Record {
 
 			if errs := fetches.Errors(); len(errs) > 0 {
 				for _, fetchErr := range errs {
-					inst.logger.Errorf(ErrFetchMessages, fetchErr.Topic, fetchErr.Err)
+					inst.logger.Panicf(ErrFetchMessages, fetchErr.Topic, fetchErr.Err)
 				}
 				continue
 			}

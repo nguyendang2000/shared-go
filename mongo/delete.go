@@ -10,7 +10,7 @@ import (
 // It uses the timeout defined in the Service struct to create a context for the operation.
 func (inst *Service) DeleteOne(dbName, collectionName string, query *Query) error {
 	// Create a context with the specified timeout from the Service struct.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database.
@@ -29,7 +29,7 @@ func (inst *Service) DeleteOne(dbName, collectionName string, query *Query) erro
 // It uses the timeout defined in the Service struct to create a context for the operation.
 func (inst *Service) DeleteMany(dbName, collectionName string, query *Query) error {
 	// Create a context with the specified timeout from the Service struct.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database.

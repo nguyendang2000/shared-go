@@ -18,7 +18,7 @@ import (
 // It uses the timeout defined in the Service struct to create a context for the operation.
 func (inst *Service) FindOne(dbName, collectionName string, query *Query, result interface{}, projection ...Projection) error {
 	// Create a context with the timeout from the Service struct.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database.
@@ -149,7 +149,7 @@ func (inst *Service) FindOneAndUpdate(dbName, collectionName string, query *Quer
 // The function uses the timeout defined in the Service struct.
 func (inst *Service) FindMany(dbName, collectionName string, query *Query, limit int64, offset int64, sort []string, result interface{}, projection ...Projection) error {
 	// Create a context with the timeout from the Service struct.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(inst.timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
 
 	// Get the collection from the specified database.
