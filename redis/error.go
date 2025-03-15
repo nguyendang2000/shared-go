@@ -95,6 +95,58 @@ const (
 	ErrClaimPendingMessages = "failed to claim pending messages: %w"
 )
 
+// Error messages for Redis Set (SSET) operations.
+// These constants define error messages for Redis set-related operations.
+const (
+	// ErrSAdd occurs when adding a member to a set fails.
+	ErrSAdd = "failed to add to set: %w"
+
+	// ErrSCard occurs when retrieving the cardinality (size) of a set fails.
+	ErrSCard = "failed to get set cardinality: %w"
+
+	// ErrSDiff occurs when retrieving the difference between sets fails.
+	ErrSDiff = "failed to get set difference: %w"
+
+	// ErrSDiffStore occurs when storing the difference of sets fails.
+	ErrSDiffStore = "failed to store set difference: %w"
+
+	// ErrSInter occurs when retrieving the intersection of sets fails.
+	ErrSInter = "failed to get set intersection: %w"
+
+	// ErrSInterCard occurs when retrieving the intersection cardinality of sets fails.
+	ErrSInterCard = "failed to get set intersection cardinality: %w"
+
+	// ErrSInterStore occurs when storing the intersection of sets fails.
+	ErrSInterStore = "failed to store set intersection: %w"
+
+	// ErrSIsMember occurs when checking for membership in a set fails.
+	ErrSIsMember = "failed to check set membership: %w"
+
+	// ErrSMembers occurs when retrieving all members of a set fails.
+	ErrSMembers = "failed to get set members: %w"
+
+	// ErrSMIsMember occurs when checking multiple memberships in a set fails.
+	ErrSMIsMember = "failed to check multiple set membership: %w"
+
+	// ErrSMove occurs when moving a member between sets fails.
+	ErrSMove = "failed to move set member: %w"
+
+	// ErrSPop occurs when popping members from a set fails.
+	ErrSPop = "failed to pop from set: %w"
+
+	// ErrSRandMember occurs when retrieving random members from a set fails.
+	ErrSRandMember = "failed to get random members from set: %w"
+
+	// ErrSRem occurs when removing members from a set fails.
+	ErrSRem = "failed to remove members from set: %w"
+
+	// ErrSUnion occurs when retrieving the union of sets fails.
+	ErrSUnion = "failed to get set union: %w"
+
+	// ErrSUnionStore occurs when storing the union of sets fails.
+	ErrSUnionStore = "failed to store set union: %w"
+)
+
 // Error messages for Redis Sorted Set (ZSET) operations.
 // These constants define error messages for Redis sorted set-related operations.
 const (
