@@ -61,33 +61,33 @@ func (inst *defaultLogger) Panic(msg string) {
 }
 
 // Debugf logs a formatted debug-level message.
-func (inst *defaultLogger) Debugf(format string, args ...interface{}) {
+func (inst *defaultLogger) Debugf(format string, args ...any) {
 	inst.logger.Printf("DEBUG: "+format, args...)
 }
 
 // Infof logs a formatted info-level message.
-func (inst *defaultLogger) Infof(format string, args ...interface{}) {
+func (inst *defaultLogger) Infof(format string, args ...any) {
 	inst.logger.Printf("INFO: "+format, args...)
 }
 
 // Warnf logs a formatted warning-level message.
-func (inst *defaultLogger) Warnf(format string, args ...interface{}) {
+func (inst *defaultLogger) Warnf(format string, args ...any) {
 	inst.logger.Printf("WARN: "+format, args...)
 }
 
 // Errorf logs a formatted error-level message.
-func (inst *defaultLogger) Errorf(format string, args ...interface{}) {
+func (inst *defaultLogger) Errorf(format string, args ...any) {
 	inst.logger.Printf("ERROR: "+format, args...)
 }
 
 // Fatalf logs a formatted fatal-level message and exits the application.
-func (inst *defaultLogger) Fatalf(format string, args ...interface{}) {
+func (inst *defaultLogger) Fatalf(format string, args ...any) {
 	inst.logger.Printf("FATAL: "+format, args...)
 	os.Exit(1)
 }
 
 // Panicf logs a formatted panic-level message and panics.
-func (inst *defaultLogger) Panicf(format string, args ...interface{}) {
+func (inst *defaultLogger) Panicf(format string, args ...any) {
 	inst.logger.Printf("PANIC: "+format, args...)
 	panic(fmt.Sprintf(format, args...))
 }

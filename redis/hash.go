@@ -35,7 +35,7 @@ func (inst *Service) HGetAll(key string) (map[string]string, error) {
 
 // HSet sets multiple fields and their values in a Redis hash.
 // It uses the stored timeout in the Service struct and returns an error if the operation fails.
-func (inst *Service) HSet(key string, fieldValues map[string]interface{}) error {
+func (inst *Service) HSet(key string, fieldValues map[string]any) error {
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 

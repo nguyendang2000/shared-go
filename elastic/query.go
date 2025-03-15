@@ -35,7 +35,7 @@ func (inst *Query) MatchAll() *Query {
 
 // Term adds a Term query to the Query, matching documents where the specified field has an exact value.
 // This is particularly useful for filtering results based on exact matches, such as IDs or keywords.
-func (inst *Query) Term(field string, value interface{}) *Query {
+func (inst *Query) Term(field string, value any) *Query {
 	inst.q.Term = map[string]types.TermQuery{
 		field: {Value: value},
 	}
@@ -44,9 +44,9 @@ func (inst *Query) Term(field string, value interface{}) *Query {
 
 // Range adds a Range query to the Query, matching documents where the specified field falls within the given range.
 // The gte (greater than or equal) and lte (less than or equal) parameters define the range boundaries.
-func (inst *Query) Range(field string, gte interface{}, lte interface{}) *Query {
+func (inst *Query) Range(field string, gte any, lte any) *Query {
 	inst.q.Range = map[string]types.RangeQuery{
-		field: map[string]interface{}{
+		field: map[string]any{
 			"gte": gte,
 			"lte": lte,
 		},
@@ -55,50 +55,50 @@ func (inst *Query) Range(field string, gte interface{}, lte interface{}) *Query 
 }
 
 // Gt adds a "greater than" condition to the Range query, matching documents where the specified field is greater than the given value.
-func (inst *Query) Gt(field string, value interface{}) *Query {
+func (inst *Query) Gt(field string, value any) *Query {
 	if inst.q.Range == nil {
 		inst.q.Range = make(map[string]types.RangeQuery)
 	}
 	if inst.q.Range[field] == nil {
-		inst.q.Range[field] = make(map[string]interface{})
+		inst.q.Range[field] = make(map[string]any)
 	}
-	inst.q.Range[field].(map[string]interface{})["gt"] = value
+	inst.q.Range[field].(map[string]any)["gt"] = value
 	return inst
 }
 
 // Lt adds a "less than" condition to the Range query, matching documents where the specified field is less than the given value.
-func (inst *Query) Lt(field string, value interface{}) *Query {
+func (inst *Query) Lt(field string, value any) *Query {
 	if inst.q.Range == nil {
 		inst.q.Range = make(map[string]types.RangeQuery)
 	}
 	if inst.q.Range[field] == nil {
-		inst.q.Range[field] = make(map[string]interface{})
+		inst.q.Range[field] = make(map[string]any)
 	}
-	inst.q.Range[field].(map[string]interface{})["lt"] = value
+	inst.q.Range[field].(map[string]any)["lt"] = value
 	return inst
 }
 
 // Gte adds a "greater than or equal" condition to the Range query, matching documents where the specified field is greater than or equal to the given value.
-func (inst *Query) Gte(field string, value interface{}) *Query {
+func (inst *Query) Gte(field string, value any) *Query {
 	if inst.q.Range == nil {
 		inst.q.Range = make(map[string]types.RangeQuery)
 	}
 	if inst.q.Range[field] == nil {
-		inst.q.Range[field] = make(map[string]interface{})
+		inst.q.Range[field] = make(map[string]any)
 	}
-	inst.q.Range[field].(map[string]interface{})["gte"] = value
+	inst.q.Range[field].(map[string]any)["gte"] = value
 	return inst
 }
 
 // Lte adds a "less than or equal" condition to the Range query, matching documents where the specified field is less than or equal to the given value.
-func (inst *Query) Lte(field string, value interface{}) *Query {
+func (inst *Query) Lte(field string, value any) *Query {
 	if inst.q.Range == nil {
 		inst.q.Range = make(map[string]types.RangeQuery)
 	}
 	if inst.q.Range[field] == nil {
-		inst.q.Range[field] = make(map[string]interface{})
+		inst.q.Range[field] = make(map[string]any)
 	}
-	inst.q.Range[field].(map[string]interface{})["lte"] = value
+	inst.q.Range[field].(map[string]any)["lte"] = value
 	return inst
 }
 

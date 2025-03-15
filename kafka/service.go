@@ -93,7 +93,7 @@ func (inst *Service) Close() {
 
 // prepareRecord creates a Kafka record with the specified topic, key, and data.
 // It serializes the key and data into JSON format.
-func prepareRecord(topic string, key interface{}, data interface{}) (*kgo.Record, error) {
+func prepareRecord(topic string, key any, data any) (*kgo.Record, error) {
 	btsData, err := json.Marshal(data)
 	if err != nil {
 		return nil, fmt.Errorf(ErrMarshalData, data, err)
@@ -117,7 +117,7 @@ func prepareRecord(topic string, key interface{}, data interface{}) (*kgo.Record
 
 // Produce asynchronously sends messages to the specified Kafka topic.
 // It logs errors encountered during the production process.
-func (inst *Service) Produce(topic string, key interface{}, data ...interface{}) error {
+func (inst *Service) Produce(topic string, key any, data ...any) error {
 	for _, d := range data {
 		record, err := prepareRecord(topic, key, d)
 		if err != nil {
@@ -136,7 +136,7 @@ func (inst *Service) Produce(topic string, key interface{}, data ...interface{})
 
 // ProduceSync sends messages to the specified Kafka topic synchronously.
 // It returns an error if any message fails to produce.
-func (inst *Service) ProduceSync(topic string, key interface{}, data ...interface{}) error {
+func (inst *Service) ProduceSync(topic string, key any, data ...any) error {
 	records := make([]*kgo.Record, len(data))
 
 	for i, d := range data {

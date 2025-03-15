@@ -118,7 +118,7 @@ func (inst *Service) Get(key string) (string, error) {
 
 // Set stores a key-value pair in Redis with an optional expiration time.
 // It returns an error if the operation fails.
-func (inst *Service) Set(key string, value interface{}, expiration time.Duration) error {
+func (inst *Service) Set(key string, value any, expiration time.Duration) error {
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 

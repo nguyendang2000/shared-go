@@ -76,31 +76,31 @@ func (inst *zapLogger) Panic(msg string) {
 }
 
 // Debugf logs a formatted debug-level message.
-func (inst *zapLogger) Debugf(format string, args ...interface{}) {
+func (inst *zapLogger) Debugf(format string, args ...any) {
 	inst.logger.Sugar().Debugf(format, args...)
 }
 
 // Infof logs a formatted info-level message.
-func (inst *zapLogger) Infof(format string, args ...interface{}) {
+func (inst *zapLogger) Infof(format string, args ...any) {
 	inst.logger.Sugar().Infof(format, args...)
 }
 
 // Warnf logs a formatted warning-level message.
-func (inst *zapLogger) Warnf(format string, args ...interface{}) {
+func (inst *zapLogger) Warnf(format string, args ...any) {
 	inst.logger.Sugar().Warnf(format, args...)
 }
 
 // Errorf logs a formatted error-level message.
-func (inst *zapLogger) Errorf(format string, args ...interface{}) {
+func (inst *zapLogger) Errorf(format string, args ...any) {
 	inst.logger.Sugar().Errorf(format, args...)
 }
 
 // Fatalf logs a formatted fatal-level message and exits the application.
-func (inst *zapLogger) Fatalf(format string, args ...interface{}) {
+func (inst *zapLogger) Fatalf(format string, args ...any) {
 	inst.logger.Sugar().Fatalf(format, args...)
 }
 
 // Panicf logs a formatted panic-level message and panics.
-func (inst *zapLogger) Panicf(format string, args ...interface{}) {
+func (inst *zapLogger) Panicf(format string, args ...any) {
 	inst.logger.Sugar().Panicf(format, args...)
 }

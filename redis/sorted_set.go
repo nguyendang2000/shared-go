@@ -27,10 +27,10 @@ type RangeArgs struct {
 	Lte *float64 // Less than or equal to (inclusive).
 }
 
-// Parse converts the range arguments into Redis-compatible range strings.
+// parse converts the range arguments into Redis-compatible range strings.
 // If `lex` is false, the function returns numeric range boundaries for score-based queries.
 // If `lex` is true, the function returns lexicographic boundaries for string-based queries.
-func (inst *RangeArgs) Parse(lex bool) (string, string) {
+func (inst *RangeArgs) parse(lex bool) (string, string) {
 	var min, max string
 
 	// Determine the lower bound
@@ -72,7 +72,7 @@ func (inst *RangeArgs) Parse(lex bool) (string, string) {
 
 // ZAdd adds a single member to a sorted set with the specified score.
 // If the member already exists, its score is updated.
-func (inst *Service) ZAdd(key string, member interface{}, score float64) error {
+func (inst *Service) ZAdd(key string, member any, score float64) error {
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
@@ -141,7 +141,7 @@ func (inst *Service) ZCard(key string) (int64, error) {
 // ZCount returns the number of elements in the sorted set within the specified score range.
 // The range boundaries are determined using the RangeArgs struct, which supports both inclusive and exclusive limits.
 func (inst *Service) ZCount(key string, rangeArgs RangeArgs) (int64, error) {
-	min, max := rangeArgs.Parse(false) // Convert RangeArgs into Redis-compatible range strings.
+	min, max := rangeArgs.parse(false) // Convert RangeArgs into Redis-compatible range strings.
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
@@ -198,7 +198,7 @@ func (inst *Service) ZRange(key string, start, stop, limit, offset int64) ([]str
 // - If `limit` is `0`, it is set to `-1` to return all matching elements.
 // - `offset` specifies how many elements to skip before returning results.
 func (inst *Service) ZRangeByLex(key string, rangeArgs RangeArgs, limit, offset int64) ([]string, error) {
-	min, max := rangeArgs.Parse(true) // Convert range arguments to lexicographic format.
+	min, max := rangeArgs.parse(true) // Convert range arguments to lexicographic format.
 
 	if limit == 0 {
 		limit = -1
@@ -227,7 +227,7 @@ func (inst *Service) ZRangeByLex(key string, rangeArgs RangeArgs, limit, offset 
 // - If `limit` is `0`, it is set to `-1` to return all matching elements.
 // - `offset` specifies how many elements to skip before returning results.
 func (inst *Service) ZRangeByScore(key string, rangeArgs RangeArgs, limit, offset int64) ([]string, error) {
-	min, max := rangeArgs.Parse(false) // Convert range arguments to numeric score format.
+	min, max := rangeArgs.parse(false) // Convert range arguments to numeric score format.
 
 	if limit == 0 {
 		limit = -1
@@ -265,7 +265,7 @@ func (inst *Service) ZRank(key, member string) (int64, error) {
 }
 
 // ZRem removes one or more members from a sorted set.
-func (inst *Service) ZRem(key string, members ...interface{}) error {
+func (inst *Service) ZRem(key string, members ...any) error {
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
@@ -278,7 +278,7 @@ func (inst *Service) ZRem(key string, members ...interface{}) error {
 
 // ZRemRangeByLex removes members in a sorted set within a lexicographic range.
 func (inst *Service) ZRemRangeByLex(key string, rangeArgs RangeArgs) error {
-	min, max := rangeArgs.Parse(true)
+	min, max := rangeArgs.parse(true)
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
@@ -303,7 +303,7 @@ func (inst *Service) ZRemRangeByRank(key string, start, stop int64) error {
 
 // ZRemRangeByScore removes members in a sorted set within a given score range.
 func (inst *Service) ZRemRangeByScore(key string, rangeArgs RangeArgs) error {
-	min, max := rangeArgs.Parse(false)
+	min, max := rangeArgs.parse(false)
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 

@@ -11,7 +11,7 @@ import (
 // AddToStream adds an entry to a Redis stream with the given values.
 // By default, an auto-generated ID is used unless a custom ID is provided.
 // It returns the message ID of the added entry or an error if the operation fails.
-func (inst *Service) AddToStream(stream string, values map[string]interface{}, id ...string) (string, error) {
+func (inst *Service) AddToStream(stream string, values map[string]any, id ...string) (string, error) {
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 

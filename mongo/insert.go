@@ -10,7 +10,7 @@ import (
 
 // InsertOne inserts a single document into the collection.
 // It uses the timeout defined in the Service struct to create a context for the operation.
-func (inst *Service) InsertOne(dbName, collectionName string, document interface{}) error {
+func (inst *Service) InsertOne(dbName, collectionName string, document any) error {
 	// Create a context with the specified timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -29,7 +29,7 @@ func (inst *Service) InsertOne(dbName, collectionName string, document interface
 
 // InsertMany inserts multiple documents into the collection using variadic arguments.
 // It uses the timeout defined in the Service struct to create a context for the operation.
-func (inst *Service) InsertMany(dbName, collectionName string, documents ...interface{}) error {
+func (inst *Service) InsertMany(dbName, collectionName string, documents ...any) error {
 	// Create a context with the specified timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()
@@ -51,7 +51,7 @@ func (inst *Service) InsertMany(dbName, collectionName string, documents ...inte
 // It uses the timeout defined in the Service struct to create a context for the operation.
 //
 // Returns the number of successfully inserted documents and an error only if all insertions fail.
-func (inst *Service) InsertManyUnordered(dbName, collectionName string, documents ...interface{}) (int64, error) {
+func (inst *Service) InsertManyUnordered(dbName, collectionName string, documents ...any) (int64, error) {
 	// Create a context with the specified timeout from the Service struct.
 	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()

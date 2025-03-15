@@ -41,7 +41,7 @@ func (inst *Service) SearchByID(index string, id string, result Document) error 
 // Search performs a search query on the specified index with pagination and sorting options.
 // The matching documents are unmarshaled into the specified result slice, and document IDs are assigned.
 // The result parameter must be a pointer to a slice of a type that implements the Document interface.
-func (inst *Service) Search(index string, query *Query, limit int64, offset int64, sort []string, result interface{}) error {
+func (inst *Service) Search(index string, query *Query, limit int64, offset int64, sort []string, result any) error {
 	// Set a timeout for the request using the configured timeout value
 	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()

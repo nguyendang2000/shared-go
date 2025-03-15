@@ -48,7 +48,7 @@ func (inst *Service) EstimatedDocumentCount(dbName, collectionName string) (int6
 // Distinct retrieves the distinct values for a specified field in a collection,
 // based on the provided query filter. It returns a slice of unique values.
 // This method uses the timeout field from the Service struct.
-func (inst *Service) Distinct(dbName, collectionName, fieldName string, query *Query) ([]interface{}, error) {
+func (inst *Service) Distinct(dbName, collectionName, fieldName string, query *Query) ([]any, error) {
 	// Use the timeout from the Service struct
 	ctx, cancel := context.WithTimeout(inst.context, time.Duration(inst.timeout)*time.Second)
 	defer cancel()

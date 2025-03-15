@@ -16,17 +16,17 @@ type Logger interface {
 	Panic(msg string)
 
 	// Debugf logs a formatted debug-level message.
-	Debugf(format string, args ...interface{})
+	Debugf(format string, args ...any)
 	// Infof logs a formatted informational message.
-	Infof(format string, args ...interface{})
+	Infof(format string, args ...any)
 	// Warnf logs a formatted warning message.
-	Warnf(format string, args ...interface{})
+	Warnf(format string, args ...any)
 	// Errorf logs a formatted error message.
-	Errorf(format string, args ...interface{})
+	Errorf(format string, args ...any)
 	// Fatalf logs a formatted fatal-level message and exits the program.
-	Fatalf(format string, args ...interface{})
+	Fatalf(format string, args ...any)
 	// Panicf logs a formatted panic-level message and panics.
-	Panicf(format string, args ...interface{})
+	Panicf(format string, args ...any)
 }
 
 var globalLogger Logger // The global logger instance.
