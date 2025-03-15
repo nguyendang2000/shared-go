@@ -3,6 +3,8 @@ package redis
 import (
 	"fmt"
 
+	"errors"
+
 	"github.com/redis/go-redis/v9"
 )
 
@@ -93,6 +95,21 @@ func (inst *Service) ZAddArgs(key string, args ZAddArgs) (int64, error) {
 	ctx, cancel := inst.getTimeout()
 	defer cancel()
 
+	// Ensure only one of NX, LT, or GT is set
+	optionCount := 0
+	if args.NX {
+		optionCount++
+	}
+	if args.LT {
+		optionCount++
+	}
+	if args.GT {
+		optionCount++
+	}
+	if optionCount > 1 {
+		return 0, errors.New(ErrInvalidZAddArgs)
+	}
+
 	// Prepare arguments for the ZADD command
 	addArgs := redis.ZAddArgs{
 		XX:      args.XX,
@@ -106,14 +123,9 @@ func (inst *Service) ZAddArgs(key string, args ZAddArgs) (int64, error) {
 	}
 
 	// Apply only one of NX, LT, or GT options
-	switch {
-	case args.NX:
-		addArgs.NX = args.NX
-	case args.LT:
-		addArgs.LT = args.LT
-	case args.GT:
-		addArgs.GT = args.GT
-	}
+	addArgs.NX = args.NX
+	addArgs.LT = args.LT
+	addArgs.GT = args.GT
 
 	// Execute ZADD with the provided arguments
 	count, err := inst.client.ZAddArgs(ctx, key, addArgs).Result()

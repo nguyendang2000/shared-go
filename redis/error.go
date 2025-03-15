@@ -156,6 +156,9 @@ const (
 	// ErrZAddArgs occurs when adding multiple members to a sorted set with arguments fails.
 	ErrZAddArgs = "failed to add to sorted set with args: %w"
 
+	// ErrInvalidZAddArgs occurs when multiple mutually exclusive options (NX, LT, GT) are set.
+	ErrInvalidZAddArgs = "only one of NX, LT, or GT can be set"
+
 	// ErrZCard occurs when retrieving the cardinality (size) of a sorted set fails.
 	ErrZCard = "failed to get sorted set cardinality: %w"
 
