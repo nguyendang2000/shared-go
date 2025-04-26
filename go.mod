@@ -7,6 +7,7 @@ require (
 	github.com/minio/minio-go/v7 v7.0.84
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/twmb/franz-go v1.18.1
+	github.com/twmb/franz-go/pkg/kadm v1.16.0
 	go.mongodb.org/mongo-driver v1.17.2
 	go.uber.org/zap v1.27.0
 )

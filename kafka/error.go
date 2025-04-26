@@ -25,3 +25,29 @@ const (
 	// ErrFetchMessages is returned when fetching messages from Kafka topics fails.
 	ErrFetchMessages = "failed to fetch messages from topic %s: %+v"
 )
+
+const (
+	// ErrCreatePartitions is returned when adding partitions to topics fails.
+	ErrCreatePartitions = "failed to add %d partitions to topics %v: %w"
+
+	// ErrCreateTopic is returned when creating a Kafka topic fails.
+	ErrCreateTopic = "failed to create topic %s: %w"
+
+	// ErrCreateTopics is returned when creating multiple Kafka topics fails.
+	ErrCreateTopics = "failed to create topics %v: %w"
+
+	// ErrDeleteGroup is returned when deleting a consumer group fails.
+	ErrDeleteGroup = "failed to delete consumer group %s: %w"
+
+	// ErrDeleteGroups is returned when deleting multiple consumer groups fails.
+	ErrDeleteGroups = "failed to delete consumer groups %v: %w"
+
+	// ErrDeleteTopic is returned when deleting a Kafka topic fails.
+	ErrDeleteTopic = "failed to delete topic %s: %w"
+
+	// ErrDeleteTopics is returned when deleting multiple Kafka topics fails.
+	ErrDeleteTopics = "failed to delete topics %v: %w"
+
+	// ErrUpdatePartitions is returned when setting the number of partitions for topics fails.
+	ErrUpdatePartitions = "failed to set %d partitions for topics %v: %w"
+)
